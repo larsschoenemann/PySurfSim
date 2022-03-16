@@ -19,6 +19,7 @@ from timeit import default_timer as timer
 from joblib import Parallel, delayed, parallel_backend
 # from PySurfSim import genSurfaceMesh, round_up_to_base
 from PySurfSim import genSurfaceMesh
+from PySurfSim import meshToolFlyCut
 from PySurfSim import applyMeshToolToWorkpiece
 from PySurfSim import sliceSurface
 from PySurfSim import combineSurface
@@ -69,6 +70,8 @@ class test_parallel_processing(unittest.TestCase):
         self.tool_mesh = np.meshgrid(toolCenterX, toolCenterY)
         self.tool_mesh.append(
             np.ones(np.shape(self.tool_mesh[0])) * toolCenterZ)
+        
+        self.tool = meshToolFlyCut(**p)
     
     def test(self):
         """
@@ -84,7 +87,7 @@ class test_parallel_processing(unittest.TestCase):
         start_time_normal = timer()
         new_mesh_normal = applyMeshToolToWorkpiece(self.surf_mesh, 
                                                    self.tool_mesh, 
-                                                   self.p)
+                                                   self.tool)
         end_time_normal = timer()
         dt_normal = end_time_normal - start_time_normal
         print(f'Normal execution: {dt_normal:.2f} s')
@@ -97,7 +100,7 @@ class test_parallel_processing(unittest.TestCase):
         new_mesh_slices = []
         with parallel_backend('loky', n_jobs=self.n_jobs):
             new_mesh_slices = Parallel()(delayed(applyMeshToolToWorkpiece)(
-                surf_mesh_slice, self.tool_mesh, self.p) 
+                surf_mesh_slice, self.tool_mesh, self.tool) 
                 for surf_mesh_slice in surf_mesh_slices)
         new_mesh_parallel = combineSurface(
             new_mesh_slices, self.n_jobs, self.n_jobs)
@@ -109,7 +112,6 @@ class test_parallel_processing(unittest.TestCase):
         # %% Test Case
         for submesh_normal, submesh_parallel, sub_dir in zip(
                 new_mesh_normal, new_mesh_parallel, ['x', 'y', 'z']):
-            print(f'Testing {sub_dir}')
             self.assertTrue(np.array_equal(submesh_normal, submesh_parallel))
         
         

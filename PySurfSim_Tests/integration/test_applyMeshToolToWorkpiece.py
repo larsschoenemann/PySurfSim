@@ -16,9 +16,10 @@ All rights reserved.
 import unittest
 import numpy as np
 from PySurfSim import applyMeshToolToWorkpiece
+from PySurfSim import meshToolFlyCut
 
 
-class test_genSurfaceMesh(unittest.TestCase):
+class test_applyMeshToolToWorkpiece(unittest.TestCase):
     def test(self):
         p = {'rasterY': 8 * 1e3,   # feed in raster direction in nm
              'feedX': 70 * 1e3,    # feed in cutting direction in nm
@@ -47,7 +48,9 @@ class test_genSurfaceMesh(unittest.TestCase):
         tool_mesh = np.meshgrid([70e3], [105e3])
         tool_mesh.append(np.ones(np.shape(tool_mesh[0])) * 60e6)
         
-        new_mesh = applyMeshToolToWorkpiece(surf_mesh, tool_mesh, p)
+        tool = meshToolFlyCut(**p)
+        
+        new_mesh = applyMeshToolToWorkpiece(surf_mesh, tool_mesh, tool)
         
         self.assertTrue(isinstance(new_mesh, list), 'input is not a list')
         self.assertEqual(len(new_mesh), 3, 'wrong number of elements')

@@ -10,12 +10,9 @@ Apply a mesh tool to a given workpiece.
           Germany
 """
 import numpy as np
-from PySurfSim.getToolFootprint import getToolFootprint
-from PySurfSim.meshToolFlyCut import meshToolFlyCut
 
 
-def applyMeshToolToWorkpiece(patchXYZ, tool_pos, p, 
-                             toolFunction=None):
+def applyMeshToolToWorkpiece(patchXYZ, tool_pos, tool):
     """
     Apply a meshed tool to a surface patch.
 
@@ -34,8 +31,8 @@ def applyMeshToolToWorkpiece(patchXYZ, tool_pos, p,
         Modified surface patches (X- & Y-Meshes and Z-height).
 
     """
-    if not callable(toolFunction):
-        toolFunction = meshToolFlyCut
+    # if not callable(toolFunction):
+    #     toolFunction = meshToolFlyCut
     
     patchX = patchXYZ[0]
     patchY = patchXYZ[1]
@@ -50,13 +47,10 @@ def applyMeshToolToWorkpiece(patchXYZ, tool_pos, p,
             in zip(toolPosX, toolPosY, toolPosZ):
         
         # caluclate footprint of tool for given height
-        [xLim, yLim] = getToolFootprint({'x': toolCenterX,
-                                         'y': toolCenterY,
-                                         'z': toolCenterZ},
-                                        rFly=p['rFly'],
-                                        deltaRfly=p['deltaRfly'],
-                                        rEps=p['rEps'],
-                                        limZ=np.max(surfZ))
+        [xLim, yLim] = tool.footprint({'x': toolCenterX,
+                                       'y': toolCenterY,
+                                       'z': toolCenterZ},
+                                       limZ=np.max(surfZ))
         # generate mask with footprint limits
         if xLim is None or yLim is None:
             print('X{:.6f} Y{:.6f} Z{:.6f}: tool not engaged'.format
@@ -95,9 +89,11 @@ def applyMeshToolToWorkpiece(patchXYZ, tool_pos, p,
                                   inYend - inYstart + 1))
             
             # apply tool function to subset
-            zT = toolFunction([subsetX, subsetY],
-                              [toolCenterX, toolCenterY, toolCenterZ],
-                              p['rFly'], p['deltaRfly'], p['rEps'])
+            # zT = toolFunction([subsetX, subsetY],
+            #                   [toolCenterX, toolCenterY, toolCenterZ],
+            #                   p['rFly'], p['deltaRfly'], p['rEps'])
+            zT = tool.getZ([subsetX, subsetY],
+                           [toolCenterX, toolCenterY, toolCenterZ])
             
             # calculate minimum of result zT and given surface height surfZ
             zS = np.reshape(surfZ[mask], 
@@ -113,8 +109,9 @@ def applyMeshToolToWorkpiece(patchXYZ, tool_pos, p,
 
 if __name__ == '__main__':
     # Visual test case
-    from PySurfSim.genSurfaceMesh import genSurfaceMesh
+    from PySurfSim import genSurfaceMesh
     from PySurfSim.helpers import round_up_to_base
+    from PySurfSim.meshToolFlyCutClass import meshToolFlyCut
     from mayavi import mlab
 
     p = {'rasterY': 8 * 1e3,   # feed in raster direction in nm
@@ -154,7 +151,9 @@ if __name__ == '__main__':
     tool_mesh = np.meshgrid(toolCenterX, toolCenterY)
     tool_mesh.append(np.ones(np.shape(tool_mesh[0])) * toolCenterZ)
     
-    new_mesh = applyMeshToolToWorkpiece(surf_mesh, tool_mesh, p)
+    tool = meshToolFlyCut(**p)
+    
+    new_mesh = applyMeshToolToWorkpiece(surf_mesh, tool_mesh, tool)
     
     # import matplotlib
     # import matplotlib.pyplot as plt

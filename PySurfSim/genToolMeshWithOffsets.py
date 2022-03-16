@@ -14,10 +14,12 @@ All rights reserved.
           Germany
 """
 import numpy as np
-from PySurfSim.applyMeshToolToWorkpiece import applyMeshToolToWorkpiece
 
 
-def applyToolPassWithOffset(surf_mesh, p, x0_pos, tool_offsets):
+def genToolMeshWithOffsets(limX, feedX, shiftF, 
+                           limY, rasterY, shiftR, 
+                           rFly,
+                           x0_pos, tool_offsets):
     """
     .
 
@@ -41,19 +43,19 @@ def applyToolPassWithOffset(surf_mesh, p, x0_pos, tool_offsets):
 
     """
     # calculate tool position
-    numX = np.min((np.ceil(p['limX'] / p['feedX']) + 1,
+    numX = np.min((np.ceil(limX / feedX) + 1,
                    len(tool_offsets['z'])))  
     # no discrete tool pos. in X
     
-    if p['rasterY'] > 0:
+    if rasterY > 0:
         # no discrete tool pos. in Y
-        numY = np.ceil(p['limY'] / p['rasterY']) + 1  
+        numY = np.ceil(limY / rasterY) + 1  
     else:
         numY = 1
     
-    toolCenterX = np.arange(numX) * p['feedX'] + p['shiftF']
-    toolCenterY = np.arange(numY) * p['rasterY'] + p['shiftR']
-    toolCenterZ = p['rFly']
+    toolCenterX = np.arange(numX) * feedX + shiftF
+    toolCenterY = np.arange(numY) * rasterY + shiftR
+    toolCenterZ = rFly
     
     tool_mesh = np.meshgrid(toolCenterX, toolCenterY)
     tool_mesh.append(np.ones(np.shape(tool_mesh[0])) * toolCenterZ)
@@ -66,4 +68,4 @@ def applyToolPassWithOffset(surf_mesh, p, x0_pos, tool_offsets):
         tool_mesh[1][0][iZ] = tool_mesh[1][0][iZ] - tool_offsets['y'][iZ]
         tool_mesh[2][0][iZ] = tool_mesh[2][0][iZ] - tool_offsets['z'][iZ]
     
-    return applyMeshToolToWorkpiece(surf_mesh, tool_mesh, p), tool_mesh
+    return tool_mesh
