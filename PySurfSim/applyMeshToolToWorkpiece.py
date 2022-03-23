@@ -1,5 +1,22 @@
+# -*- coding: utf-8 -*-
 """
 Apply a mesh tool to a given workpiece.
+
+Copyright (C) 2022  Lars Schönemann
+
+This library is free software; you can redistribute it and/or modify 
+it under the terms of the GNU Lesser General Public License as published by 
+the Free Software Foundation; either version 2.1 of the License, or 
+(at your option) any later version.
+
+This library is distributed in the hope that it will be useful, 
+but WITHOUT ANY WARRANTY; without even the implied warranty of 
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License 
+along with this library; if not, write to the Free Software Foundation, Inc., 
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 @author: Dr.-Ing. Lars Schönemann
 @contact: schoenemann@iwt.uni-bremen.de
@@ -9,6 +26,7 @@ Apply a mesh tool to a given workpiece.
           28359 Bremen
           Germany
 """
+
 import numpy as np
 
 
@@ -31,9 +49,6 @@ def applyMeshToolToWorkpiece(patchXYZ, tool_pos, tool):
         Modified surface patches (X- & Y-Meshes and Z-height).
 
     """
-    # if not callable(toolFunction):
-    #     toolFunction = meshToolFlyCut
-    
     patchX = patchXYZ[0]
     patchY = patchXYZ[1]
     surfZ = patchXYZ[2].copy()
@@ -50,7 +65,7 @@ def applyMeshToolToWorkpiece(patchXYZ, tool_pos, tool):
         [xLim, yLim] = tool.footprint({'x': toolCenterX,
                                        'y': toolCenterY,
                                        'z': toolCenterZ},
-                                       limZ=np.max(surfZ))
+                                      limZ=np.max(surfZ))
         # generate mask with footprint limits
         if xLim is None or yLim is None:
             print('X{:.6f} Y{:.6f} Z{:.6f}: tool not engaged'.format
@@ -89,9 +104,6 @@ def applyMeshToolToWorkpiece(patchXYZ, tool_pos, tool):
                                   inYend - inYstart + 1))
             
             # apply tool function to subset
-            # zT = toolFunction([subsetX, subsetY],
-            #                   [toolCenterX, toolCenterY, toolCenterZ],
-            #                   p['rFly'], p['deltaRfly'], p['rEps'])
             zT = tool.getZ([subsetX, subsetY],
                            [toolCenterX, toolCenterY, toolCenterZ])
             
@@ -147,7 +159,6 @@ if __name__ == '__main__':
     toolCenterY = np.arange(numY) * p['rasterY']
     toolCenterZ = p['rFly']
     
-    # tool_mesh = np.meshgrid(toolCenterX, toolCenterY, toolCenterZ)
     tool_mesh = np.meshgrid(toolCenterX, toolCenterY)
     tool_mesh.append(np.ones(np.shape(tool_mesh[0])) * toolCenterZ)
     
@@ -155,18 +166,8 @@ if __name__ == '__main__':
     
     new_mesh = applyMeshToolToWorkpiece(surf_mesh, tool_mesh, tool)
     
-    # import matplotlib
-    # import matplotlib.pyplot as plt
-    # from matplotlib import cm
-    # fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-    # ax.scatter3D(new_mesh[0], new_mesh[1], new_mesh[2], c=new_mesh[2],
-    #              cmap=cm.inferno, edgecolor='none')
-    # ax.set_box_aspect(aspect = (1,1,1/10))
-    # ax.azim = -125
-    
-    # mlab.options.backend = 'envisage'
     mlab.options.backend = 'auto'
-    # f = mlab.figure(fgcolor=(0., 0., 0.), bgcolor=(1, 1, 1))
+
     mlab.surf(new_mesh[0].T, new_mesh[1].T, new_mesh[2].T,
               warp_scale=1000, colormap='afmhot')
     mlab.axes(xlabel='feed', ylabel='raster', zlabel='height',

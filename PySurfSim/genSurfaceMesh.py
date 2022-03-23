@@ -1,9 +1,22 @@
 # -*- coding: utf-8 -*-
 """
-Generates a surface mesh according input values.
+Generate a surface mesh for numerical simulation.
 
-Created on 2021-10-20
-All rights reserved.
+Copyright (C) 2022  Lars Schönemann
+
+This library is free software; you can redistribute it and/or modify 
+it under the terms of the GNU Lesser General Public License as published by 
+the Free Software Foundation; either version 2.1 of the License, or 
+(at your option) any later version.
+
+This library is distributed in the hope that it will be useful, 
+but WITHOUT ANY WARRANTY; without even the implied warranty of 
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License 
+along with this library; if not, write to the Free Software Foundation, Inc., 
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 @author: Dr.-Ing. Lars Schönemann
 @contact: schoenemann@iwt.uni-bremen.de
@@ -19,7 +32,7 @@ import numpy as np
 def genSurfaceMesh(dX, dY, zHeight=40.0,
                    resolution=100.0, fixedNumPoints=False):
     """
-    Generate a surface mesh according input values.
+    Generate a surface mesh.
 
     Parameters
     ----------
@@ -61,5 +74,3 @@ def genSurfaceMesh(dX, dY, zHeight=40.0,
     mygrid = np.meshgrid(xVec, yVec)
     mygrid.append(np.ones(np.shape(mygrid[0])) * zHeight)
     return mygrid
-
-# tests are not in unittest directory
