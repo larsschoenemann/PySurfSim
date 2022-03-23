@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from .applyMeshToolToWorkpiece import applyMeshToolToWorkpiece
 from .meshToolFlyCut import meshToolFlyCut
 from .combineSurface import combineSurface

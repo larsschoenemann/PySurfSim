@@ -22,8 +22,8 @@ This framework allows for the numerical simulation of nanoscale surfaces generat
 ## Contact
 Leibniz-Institute for Materials Engineering IWT  
 Laboratory for Precision Machining LFM  
-Dr.-Ing. Lars Schˆnemann  
-Badgasteiner Straﬂe 3  
+Dr.-Ing. Lars Sch√∂nemann  
+Badgasteiner Stra√üe 3  
 28359 Bremen  
 Germany  
 schoenemann@iwt.uni-bremen.de
