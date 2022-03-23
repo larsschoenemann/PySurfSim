@@ -123,7 +123,7 @@ if __name__ == '__main__':
     # Visual test case
     from PySurfSim import genSurfaceMesh
     from PySurfSim.helpers import round_up_to_base
-    from PySurfSim.meshToolFlyCutClass import meshToolFlyCut
+    from PySurfSim.meshToolFlyCut import meshToolFlyCut
     from mayavi import mlab
 
     p = {'rasterY': 8 * 1e3,   # feed in raster direction in nm
