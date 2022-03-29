@@ -26,44 +26,46 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           28359 Bremen
           Germany
 """
+import csv
 import unittest
-import numpy as np
-from PySurfSim import exportSurface
 from pathlib import Path
 
+import numpy as np
+from PySurfSim import exportSurface
 
-class test_genSurfaceMesh(unittest.TestCase):
+
+class TestUnitExportSurface(unittest.TestCase):
+    """ Test Cases for exporting surfaces """
     def setUp(self):
         if Path('test.asc').is_file():
             Path('test.asc').unlink()
             
-        self.xLen = 0.001e6
-        self.yLen = 0.002e6
-        self.zHei = 40.0
+        self.x_len = 0.001e6
+        self.y_len = 0.002e6
+        self.z_height = 40.0
         self.res = 100
         
     def tearDown(self):
         if Path('test.asc').is_file():
             Path('test.asc').unlink()
     
-    def test(self):
-        xVec = np.arange(0.0, self.xLen + self.res, self.res)
-        yVec = np.arange(0.0, self.yLen + self.res, self.res)
-        surf_mesh = np.meshgrid(xVec, yVec)
-        surf_mesh.append(np.ones(np.shape(surf_mesh[0])) * self.zHei)
+    def test_export_surface(self):
+        """ test export of surfaces to ASCII """
+        x_vec = np.arange(0.0, self.x_len + self.res, self.res)
+        y_vec = np.arange(0.0, self.y_len + self.res, self.res)
+        surf_mesh = np.meshgrid(x_vec, y_vec)
+        surf_mesh.append(np.ones(np.shape(surf_mesh[0])) * self.z_height)
 
         exportSurface('test.asc', surf_mesh)
         
         self.assertTrue(Path('test.asc').is_file(), 'no file created')
         
-        import csv
         header = []
         rows = []
-        r_numX = -1
-        r_numY = -1
-        r_xLen = -1.0
-        r_yLen = -1.0
-        with open('test.asc', 'r') as file:
+        r_num = {'x': -1, 'y': -1}
+        r_len = {'x': -1.0, 'y': -1.0}
+        
+        with open('test.asc', 'r', encoding='utf-8') as file:
             csvreader = csv.reader(file, delimiter='\t')
             while True:
                 line = next(csvreader)
@@ -72,23 +74,23 @@ class test_genSurfaceMesh(unittest.TestCase):
                     break
                 pline = line[0].partition(' = ')
                 if pline[0] == '# x-pixels':
-                    r_numX = int(pline[-1])
+                    r_num['x'] = int(pline[-1])
                 if pline[0] == '# y-pixels':
-                    r_numY = int(pline[-1])
+                    r_num['y'] = int(pline[-1])
                 if pline[0] == '# x-length':
-                    r_xLen = float(pline[-1])
+                    r_len['x'] = float(pline[-1])
                 if pline[0] == '# y-length':
-                    r_yLen = float(pline[-1])
+                    r_len['y'] = float(pline[-1])
             for row in csvreader:
                 if row[-1] == '':
                     row = row[:-1]
                 rows.append(row)
         surf_mesh_read = np.array(rows).astype(float)
         
-        self.assertEqual(self.xLen, r_xLen, 'wrong xLen')
-        self.assertEqual(self.yLen, r_yLen, 'wrong yLen')
-        self.assertEqual(len(xVec), r_numX, 'wrong number of elements (x)')
-        self.assertEqual(len(yVec), r_numY, 'wrong number of elements (y)')
+        self.assertEqual(self.x_len, r_len['x'], 'wrong xLen')
+        self.assertEqual(self.y_len, r_len['y'], 'wrong yLen')
+        self.assertEqual(len(x_vec), r_num['x'], 'wrong number of elements (x)')
+        self.assertEqual(len(y_vec), r_num['y'], 'wrong number of elements (y)')
         self.assertTrue(np.array_equal(surf_mesh_read, surf_mesh[2]),
                         'z values not equal')
         

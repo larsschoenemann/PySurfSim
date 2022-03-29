@@ -115,14 +115,14 @@ class meshToolFlyCut:
         r2 = self.rEps  # second radius
 
         # calculate max height according to r1
-        h = -(tool_pos['z'] - r1 - limZ)  
+        h = -(tool_pos[2] - r1 - limZ)  
         if h > 0:
             sqrX = np.sqrt(2 * r1 * h - h**2)
             sqrY = np.sqrt(2 * r2 * h - h**2)
             # calc. X limits
-            xLim = (-sqrX + tool_pos['x'], sqrX + tool_pos['x'])  
+            xLim = (-sqrX + tool_pos[0], sqrX + tool_pos[0])  
             # calc. Y limits
-            yLim = (-sqrY + tool_pos['y'], sqrY + tool_pos['y'])  
+            yLim = (-sqrY + tool_pos[1], sqrY + tool_pos[1])  
         else:
             xLim = None
             yLim = None

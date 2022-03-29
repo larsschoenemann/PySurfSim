@@ -28,7 +28,9 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 """
 import unittest
 import numpy as np
+import PySurfSim
 from PySurfSim import meshToolFlyCut
+
 
 
 class test_meshToolFlyCut(unittest.TestCase):
@@ -37,11 +39,15 @@ class test_meshToolFlyCut(unittest.TestCase):
         yVec = np.arange(0.0, 0.210e6, 100)
         surf_mesh = np.meshgrid(xVec, yVec)
         
-        tool_mesh = meshToolFlyCut(surf_mesh, [70e3, 104e3, 60e6],
-                                   60e6, 0, 762e3)
+        tool_mesh = meshToolFlyCut(rFly=80e6, deltaRfly=0.1, rEps=0.8e6)
         
-        self.assertIsInstance(tool_mesh, np.ndarray)
-        self.assertEqual(tool_mesh.shape, (210e3 / 100, 140e3 / 100))
+        self.assertIsInstance(tool_mesh, PySurfSim.meshToolFlyCut)
+        
+        fp = tool_mesh.footprint([0.07e6, 0.104e6, 80e6])
+        self.assertEqual(np.shape(fp), (2, 2))
+
+        tz = tool_mesh.getZ(surf_mesh, [70e3, 104e3, 60e6])
+        self.assertEqual(tz.shape, (210e3 / 100, 140e3 / 100))
         
 
 if __name__ == '__main__':

@@ -27,9 +27,9 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           Germany
 """
 import unittest
+
 import numpy as np
-from PySurfSim import combineSurface
-from PySurfSim import pairwise
+from PySurfSim import combineSurface, pairwise
 
 
 class test_combineSurface(unittest.TestCase):

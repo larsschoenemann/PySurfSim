@@ -62,9 +62,9 @@ def applyMeshToolToWorkpiece(patchXYZ, tool_pos, tool):
             in zip(toolPosX, toolPosY, toolPosZ):
         
         # caluclate footprint of tool for given height
-        [xLim, yLim] = tool.footprint({'x': toolCenterX,
-                                       'y': toolCenterY,
-                                       'z': toolCenterZ},
+        [xLim, yLim] = tool.footprint([toolCenterX,
+                                       toolCenterY,
+                                       toolCenterZ],
                                       limZ=np.max(surfZ))
         # generate mask with footprint limits
         if xLim is None or yLim is None:
@@ -179,3 +179,4 @@ if __name__ == '__main__':
     cb.number_of_labels = int(np.ceil(25 / 5) + 1)
     cb.label_text_property.font_size = 10
     mlab.view(azimuth=-135, elevation=66, distance='auto')
+    mlab.show()

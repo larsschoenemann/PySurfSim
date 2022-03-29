@@ -27,41 +27,44 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           Germany
 """
 import unittest
+
 import numpy as np
-from PySurfSim import applyMeshToolToWorkpiece
-from PySurfSim import meshToolFlyCut
+from PySurfSim import applyMeshToolToWorkpiece, meshToolFlyCut
 
 
-class test_applyMeshToolToWorkpiece(unittest.TestCase):
+class TestIntApplyMeshToolToWorkpiece(unittest.TestCase):
+    """ test cases for mesh tool application """
     def test(self):
-        p = {'rasterY': 8 * 1e3,   # feed in raster direction in nm
-             'feedX': 70 * 1e3,    # feed in cutting direction in nm
-             'rFly': 60 * 1E6,     # flycut radius in nm
-             'rEps': 0.762 * 1E6,  # tool nose radius in nm
-             # deviation in flycut radius to nominal value in nm
-             'deltaRfly': 0.0,   
-             # shift of tool in feed direction (necessary for second tool)
-             'shiftF': 0.0,      
-             'limX': 0.334833e6,   # limits of simulated surface in X in nm
-             'limY': 0.334618e6,   # limits of simulated surface in Y in nm
-             # initial surface height in nm (less height means less computation 
-             # time, as the "footprint" of the flycutter is determined using 
-             # this value
-             'limZ': 100.0,       
-             'raster': 100.0,    # raster spacing of simulated surface
-             'numpoints': 1024,  # numer of points
-             'fixedNumPoints': True,
-             'visualize': True}  # do we want to plot the result?
+        """standard test case"""
+        parameters = {
+            'rasterY': 8 * 1e3,   # feed in raster direction in nm
+            'feedX': 70 * 1e3,    # feed in cutting direction in nm
+            'rFly': 60 * 1E6,     # flycut radius in nm
+            'rEps': 0.762 * 1E6,  # tool nose radius in nm
+            # deviation in flycut radius to nominal value in nm
+            'deltaRfly': 0.0,   
+            # shift of tool in feed direction (necessary for second tool)
+            'shiftF': 0.0,      
+            'limX': 0.334833e6,   # limits of simulated surface in X in nm
+            'limY': 0.334618e6,   # limits of simulated surface in Y in nm
+            # initial surface height in nm (less height means less computation 
+            # time, as the "footprint" of the flycutter is determined using 
+            # this value
+            'limZ': 100.0,       
+            'raster': 100.0,    # raster spacing of simulated surface
+            'numpoints': 1024,  # numer of points
+            'fixedNumPoints': True,
+            'visualize': True}  # do we want to plot the result?
         
-        xVec = np.arange(0.0, 0.140e6, 100)
-        yVec = np.arange(0.0, 0.210e6, 100)
-        surf_mesh = np.meshgrid(xVec, yVec)
+        x_vec = np.arange(0.0, 0.140e6, 100)
+        y_vec = np.arange(0.0, 0.210e6, 100)
+        surf_mesh = np.meshgrid(x_vec, y_vec)
         surf_mesh.append(np.ones(np.shape(surf_mesh[0])) * 40.0)
         
         tool_mesh = np.meshgrid([70e3], [105e3])
         tool_mesh.append(np.ones(np.shape(tool_mesh[0])) * 60e6)
         
-        tool = meshToolFlyCut(**p)
+        tool = meshToolFlyCut(**parameters)
         
         new_mesh = applyMeshToolToWorkpiece(surf_mesh, tool_mesh, tool)
         

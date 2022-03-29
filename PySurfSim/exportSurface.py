@@ -47,7 +47,8 @@ def exportSurface(filename, surfMesh):
     None.
 
     """
-    with open(filename, 'w', newline='\r\n') as fid:  # open file for writing
+    with open(filename, 'w', newline='\r\n',
+              encoding='utf-8') as fid:  # open file for writing
         shapeZ = np.shape(surfMesh)
         # Write header
         fid.write('# File Format = ASCII\n')
@@ -55,13 +56,13 @@ def exportSurface(filename, surfMesh):
         fid.write('# Original file: \n')
         fid.write('# forcecurve = 0\n')
         # number of pixel in X:
-        fid.write('# x-pixels = {}\n'.format(shapeZ[2]))
+        fid.write(f'# x-pixels = {shapeZ[2]}\n')
         # number of pixel in Y:
-        fid.write('# y-pixels = {}\n'.format(shapeZ[1]))
+        fid.write(f'# y-pixels = {shapeZ[1]}\n')
         # length in X, i.e. last point of meshX:
-        fid.write('# x-length = {:0.0f}\n'.format(surfMesh[0][-1][-1]))
+        fid.write(f'# x-length = {surfMesh[0][-1][-1]:0.0f}\n')
         # length in Y, i.e. last point of meshY
-        fid.write('# y-length = {:0.0f}\n'.format(surfMesh[1][-1][-1]))
+        fid.write(f'# y-length = {surfMesh[1][-1][-1]:0.0f}\n')
         fid.write('# x-offset = 0\n')
         fid.write('# y-offset = 0\n')
         fid.write('# z-unit = nm\n')  # alles values in nm!
@@ -76,6 +77,6 @@ def exportSurface(filename, surfMesh):
         for i in range(shapeZ[1]):
             for j in range(shapeZ[2]):
                 # write surface point
-                fid.write('{:.8f}\t'.format(surfMesh[2][i, j]))
+                fid.write(f'{surfMesh[2][i, j]:.8f}\t')
 
             fid.write('\n')  # write EOL

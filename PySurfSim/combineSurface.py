@@ -78,7 +78,7 @@ def combineSurface(slicedSurface, xDiv, yDiv):
     for nd in range(ndim):
         dslice = [d[nd] for d in slicedSurface]
 
-        rows = list()  # initialize new list
+        rows = []  # initialize new list
 
         for i in range(yDiv):
             # concatenate portion of slided surface

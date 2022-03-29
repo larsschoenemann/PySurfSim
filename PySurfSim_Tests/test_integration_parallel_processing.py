@@ -27,21 +27,19 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           Germany
 """
 import unittest
-import numpy as np
 from timeit import default_timer as timer
+
+import numpy as np
 from joblib import Parallel, delayed, parallel_backend
-# from PySurfSim import genSurfaceMesh, round_up_to_base
-from PySurfSim import genSurfaceMesh
-from PySurfSim import meshToolFlyCut
-from PySurfSim import applyMeshToolToWorkpiece
-from PySurfSim import sliceSurface
-from PySurfSim import combineSurface
+from PySurfSim import (applyMeshToolToWorkpiece, combineSurface,
+                       genSurfaceMesh, meshToolFlyCut, sliceSurface)
 
 
-class test_parallel_processing(unittest.TestCase):
+class TestParallelProcessing(unittest.TestCase):
+    """ Parallel processing test cases """
     def setUp(self):
         print('Setting up parallel test')
-        p = {
+        parameters = {
             'rasterY': 8 * 1e3,   # feed in raster direction in nm
             'feedX': 70 * 1e3,    # feed in cutting direction in nm
             'rFly': 60 * 1E6,     # flycut radius in nm
@@ -50,8 +48,8 @@ class test_parallel_processing(unittest.TestCase):
             'deltaRfly': 0.0,   
             # shift of tool in feed direction (necessary for second tool)
             'shiftF': 0.0,      
-            'limX': 0.334833e6,   # limits of simulated surface in X in nm
-            'limY': 0.334618e6,   # limits of simulated surface in Y in nm
+            'limX': 0.600e6,   # limits of simulated surface in X in nm
+            'limY': 0.600e6,   # limits of simulated surface in Y in nm
             # initial surface height in nm (less height means less computation 
             # time, as the "footprint" of the flycutter is determined using 
             # this value
@@ -60,41 +58,34 @@ class test_parallel_processing(unittest.TestCase):
             'numpoints': 1024,  # numer of points
             'fixedNumPoints': True,
             'visualize': True}  # do we want to plot the result?
-        self.p = p
-        print(p)
+        self.parameters = parameters
+        print(parameters)
         self.n_jobs = 8
         print(f'Parallel jobs {self.n_jobs}')
         
         self.surf_mesh = genSurfaceMesh(
-            p['limX'], p['limY'], p['limZ'], 
-            p['numpoints'], fixedNumPoints=p['fixedNumPoints'])
+            parameters['limX'], parameters['limY'], parameters['limZ'], 
+            parameters['numpoints'], fixedNumPoints=parameters['fixedNumPoints'])
         
         # calculate tool position
         # number of discrete tool positions in X
-        numX = np.ceil(p['limX'] / p['feedX']) + 1  
+        num_x = np.ceil(parameters['limX'] / parameters['feedX']) + 1  
         # number of discrete tool positions in Y
-        numY = np.ceil(p['limY'] / p['rasterY']) + 1  
+        num_y = np.ceil(parameters['limY'] / parameters['rasterY']) + 1  
 
-        toolCenterX = np.arange(numX) * p['feedX'] + p['shiftF']
-        toolCenterY = np.arange(numY) * p['rasterY']
-        toolCenterZ = p['rFly']
+        tool_center_x = np.arange(num_x) * parameters['feedX'] + parameters['shiftF']
+        tool_center_y = np.arange(num_y) * parameters['rasterY']
+        tool_center_z = parameters['rFly']
         
         # tool_mesh = np.meshgrid(toolCenterX, toolCenterY, toolCenterZ)
-        self.tool_mesh = np.meshgrid(toolCenterX, toolCenterY)
+        self.tool_mesh = np.meshgrid(tool_center_x, tool_center_y)
         self.tool_mesh.append(
-            np.ones(np.shape(self.tool_mesh[0])) * toolCenterZ)
+            np.ones(np.shape(self.tool_mesh[0])) * tool_center_z)
         
-        self.tool = meshToolFlyCut(**p)
+        self.tool = meshToolFlyCut(**parameters)
     
     def test(self):
-        """
-        Test if normal and parallel processing yields the same results.
-
-        Returns
-        -------
-        None.
-
-        """
+        """ Test if normal and parallel processing yields the same results """
         # %% normal execution
         print('Calculating normally')
         start_time_normal = timer()
@@ -123,8 +114,8 @@ class test_parallel_processing(unittest.TestCase):
         print(f'Parallel execution: {dt_parallel:.2f} s')
         
         # %% Test Case
-        for submesh_normal, submesh_parallel, sub_dir in zip(
-                new_mesh_normal, new_mesh_parallel, ['x', 'y', 'z']):
+        for submesh_normal, submesh_parallel in zip(
+                new_mesh_normal, new_mesh_parallel):
             self.assertTrue(np.array_equal(submesh_normal, submesh_parallel))
         
         

@@ -26,12 +26,11 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           28359 Bremen
           Germany
 """
-import unittest
-import numpy as np
 import random
-from PySurfSim import genSurfaceMesh
-from PySurfSim import sliceSurface
-from PySurfSim import combineSurface
+import unittest
+
+import numpy as np
+from PySurfSim import combineSurface, genSurfaceMesh, sliceSurface
 
 
 class test_surface_slicing(unittest.TestCase):
