@@ -31,23 +31,23 @@ import numpy as np
 from PySurfSim.helpers import pairwise
 
 
-def sliceSurface(surfaceToSlice, xDiv, yDiv):
+def slice_surface(surface_to_slice, x_div, y_div):
     """
     Split a meshed surface into smaller patches.
 
     Parameters
     ----------
-    surfaceToSlice : list of arrays, float
+    surface_to_slice : list of arrays, float
         A list of 3 numpy arrays (X, Y and Z) with X and Y defining the surface
         grid and Z defining the height at each point of the grid.
-    xDiv : int
+    x_div : int
         No of patches in X-direction.
-    yDiv : int
+    y_div : int
         No of patches in Y-direction.
 
     Returns
     -------
-    slicedSurface : list of arrays, float
+    sliced_surface : list of arrays, float
         Returns a list of xDiv*yDiv patches containing slices of the original
         meshed surface.
 
@@ -57,28 +57,28 @@ def sliceSurface(surfaceToSlice, xDiv, yDiv):
     Leibniz Institute for Materials Engineering IWT, Bremen, Germany
     v1.0, 2021-10-21
     """
-    if xDiv <= 0:
-        raise ValueError(f'division in x cannot be 0 or negative (is {xDiv})')
-    if yDiv <= 0:
-        raise ValueError(f'division in y cannot be 0 or negative (is {yDiv})')
+    if x_div <= 0:
+        raise ValueError(f'division in x cannot be 0 or negative (is {x_div})')
+    if y_div <= 0:
+        raise ValueError(f'division in y cannot be 0 or negative (is {y_div})')
 
-    slicedSurface = list()
+    sliced_surface = []
     # get dim. of surface to slice
-    [_, xLen, yLen] = np.shape(surfaceToSlice)
+    [_, x_len, y_len] = np.shape(surface_to_slice)
     
-    if xDiv > xLen:
-        raise ValueError(f'more divisions than length in x ({xDiv} > {xLen})')
-    if yDiv > yLen:
-        raise ValueError(f'more divisions than length in y ({yDiv} > {yLen})')
+    if x_div > x_len:
+        raise ValueError(f'more divisions than length in x ({x_div} > {x_len})')
+    if y_div > y_len:
+        raise ValueError(f'more divisions than length in y ({y_div} > {y_len})')
     
     # create divions in 1st dim.
-    a = np.floor(np.linspace(0, xLen, xDiv + 1)).astype(int)
+    div_a = np.floor(np.linspace(0, x_len, x_div + 1)).astype(int)
     # create divions in 2nd dim.
-    b = np.floor(np.linspace(0, yLen, yDiv + 1)).astype(int)
+    div_b = np.floor(np.linspace(0, y_len, y_div + 1)).astype(int)
 
-    for (b1, b2) in pairwise(b):    
-        for (a1, a2) in pairwise(a):
-            thisslice = [sliceElement[a1:a2, b1:b2]
-                         for sliceElement in surfaceToSlice]
-            slicedSurface.append(thisslice)
-    return slicedSurface
+    for (b_1, b_2) in pairwise(div_b):    
+        for (a_1, a_2) in pairwise(div_a):
+            thisslice = [sliceElement[a_1:a_2, b_1:b_2]
+                         for sliceElement in surface_to_slice]
+            sliced_surface.append(thisslice)
+    return sliced_surface

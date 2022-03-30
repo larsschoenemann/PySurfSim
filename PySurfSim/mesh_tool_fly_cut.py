@@ -29,19 +29,19 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 import numpy as np
 
 
-class meshToolFlyCut:
+class MeshToolFlyCut:
     """Class for a fly-cutting tool."""
     
-    rFly = None
-    deltaRfly = None
-    rEps = None
+    r_fly = None
+    delta_r_fly = None
+    r_eps = None
     
     def __init__(self, **kwargs):
-        self.rFly = kwargs.get('rFly', 70e6)
-        self.deltaRfly = kwargs.get('deltaRfly', 0.0)
-        self.rEps = kwargs.get('rEps', 0.762e6)
+        self.r_fly = kwargs.get('r_fly', 70e6)
+        self.delta_r_fly = kwargs.get('delta_r_fly', 0.0)
+        self.r_eps = kwargs.get('r_eps', 0.762e6)
     
-    def getZ(self, surf_mesh, tool_pos):
+    def get_z(self, surf_mesh, tool_pos):
         """
         Tool geometry of a fly-cutter over a given surface.
     
@@ -69,24 +69,24 @@ class meshToolFlyCut:
         Leibniz Institute for Materials Engineering IWT, Bremen, Germany
         v1.0, 2021-10-21
         """
-        meshX = surf_mesh[0]
-        meshY = surf_mesh[1]
+        mesh_x = surf_mesh[0]
+        mesh_y = surf_mesh[1]
     
-        xM = tool_pos[0]
-        yM = tool_pos[1]
-        zM = tool_pos[2]
+        x_m = tool_pos[0]
+        y_m = tool_pos[1]
+        z_m = tool_pos[2]
     
         # $$z_T = -\sqrt{(r_{fly}+\Delta r_{fly})^2 - (x-x_M)^2}
         #         - \sqrt{r_{\epsilon}^2-(y-y_M)^2} + r_\epsilon + z_M$$
-        zT = - np.sqrt((self.rFly + self.deltaRfly)**2 - (meshX - xM)**2) \
-             - np.sqrt(self.rEps**2 - (meshY - yM)**2) + self.rEps + zM
+        z_t = - np.sqrt((self.r_fly + self.delta_r_fly)**2 - (mesh_x - x_m)**2) \
+              - np.sqrt(self.r_eps**2 - (mesh_y - y_m)**2) + self.r_eps + z_m
     
         # remove imagionary part, i.e. values outside of tool footprint
         # zT(imag(zT)~=0) = NaN
     
-        return zT
+        return z_t
 
-    def footprint(self, tool_pos, limZ=40.0):
+    def footprint(self, tool_pos, lim_z=40.0):
         """
         Generate a tool footprint.
 
@@ -111,20 +111,20 @@ class meshToolFlyCut:
             DESCRIPTION.
 
         """
-        r1 = self.rFly + self.deltaRfly  # first radius
-        r2 = self.rEps  # second radius
+        r_1 = self.r_fly + self.delta_r_fly  # first radius
+        r_2 = self.r_eps  # second radius
 
         # calculate max height according to r1
-        h = -(tool_pos[2] - r1 - limZ)  
-        if h > 0:
-            sqrX = np.sqrt(2 * r1 * h - h**2)
-            sqrY = np.sqrt(2 * r2 * h - h**2)
+        height = -(tool_pos[2] - r_1 - lim_z)  
+        if height > 0:
+            sqrt_x = np.sqrt(2 * r_1 * height - height**2)
+            sqrt_y = np.sqrt(2 * r_2 * height - height**2)
             # calc. X limits
-            xLim = (-sqrX + tool_pos[0], sqrX + tool_pos[0])  
+            x_lim = (-sqrt_x + tool_pos[0], sqrt_x + tool_pos[0])  
             # calc. Y limits
-            yLim = (-sqrY + tool_pos[1], sqrY + tool_pos[1])  
+            y_lim = (-sqrt_y + tool_pos[1], sqrt_y + tool_pos[1])  
         else:
-            xLim = None
-            yLim = None
+            x_lim = None
+            y_lim = None
 
-        return xLim, yLim
+        return x_lim, y_lim

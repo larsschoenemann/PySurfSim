@@ -29,10 +29,11 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 import numpy as np
 
 
-def genToolMeshWithOffsets(limX, feedX, shiftF, 
-                           limY, rasterY, shiftR, 
-                           rFly,
-                           x0_pos, tool_offsets):
+def gen_tool_mesh_with_offsets(
+    lim_x, feed_x, shift_f, 
+    lim_y, raster_y, shift_r, 
+    r_fly,
+    x0_pos, tool_offsets):
     """
     .
 
@@ -56,29 +57,29 @@ def genToolMeshWithOffsets(limX, feedX, shiftF,
 
     """
     # calculate tool position
-    numX = np.min((np.ceil(limX / feedX) + 1,
+    num_x = np.min((np.ceil(lim_x / feed_x) + 1,
                    len(tool_offsets['z'])))  
     # no discrete tool pos. in X
     
-    if rasterY > 0:
+    if raster_y > 0:
         # no discrete tool pos. in Y
-        numY = np.ceil(limY / rasterY) + 1  
+        num_y = np.ceil(lim_y / raster_y) + 1  
     else:
-        numY = 1
+        num_y = 1
     
-    toolCenterX = np.arange(numX) * feedX + shiftF
-    toolCenterY = np.arange(numY) * rasterY + shiftR
-    toolCenterZ = rFly
+    tool_center_x = np.arange(num_x) * feed_x + shift_f
+    tool_center_y = np.arange(num_y) * raster_y + shift_r
+    tool_center_z = r_fly
     
-    tool_mesh = np.meshgrid(toolCenterX, toolCenterY)
-    tool_mesh.append(np.ones(np.shape(tool_mesh[0])) * toolCenterZ)
+    tool_mesh = np.meshgrid(tool_center_x, tool_center_y)
+    tool_mesh.append(np.ones(np.shape(tool_mesh[0])) * tool_center_z)
     # for iP in range(np.min((len(tool_mesh[0]), len(x0_pos_um)))):
     #     tool_mesh[0][iP] = tool_mesh[0][iP] + x0_pos_um[iP] * um2nm
     tool_mesh[0] = tool_mesh[0] + x0_pos
-    for iZ in range(np.shape(tool_mesh)[2]):
+    for i in range(np.shape(tool_mesh)[2]):
         # tool_mesh[0][0][iZ] = tool_mesh[0][0][iZ] - x_off_w1_nm[groove][iZ]
-        tool_mesh[0][0][iZ] = tool_mesh[0][0][iZ] - tool_offsets['x'][iZ]
-        tool_mesh[1][0][iZ] = tool_mesh[1][0][iZ] - tool_offsets['y'][iZ]
-        tool_mesh[2][0][iZ] = tool_mesh[2][0][iZ] - tool_offsets['z'][iZ]
+        tool_mesh[0][0][i] = tool_mesh[0][0][i] - tool_offsets['x'][i]
+        tool_mesh[1][0][i] = tool_mesh[1][0][i] - tool_offsets['y'][i]
+        tool_mesh[2][0][i] = tool_mesh[2][0][i] - tool_offsets['z'][i]
     
     return tool_mesh

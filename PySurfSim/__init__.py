@@ -1,9 +1,20 @@
 # -*- coding: utf-8 -*-
-from .applyMeshToolToWorkpiece import applyMeshToolToWorkpiece
-from .meshToolFlyCut import meshToolFlyCut
-from .combineSurface import combineSurface
-from .sliceSurface import sliceSurface
-from .genSurfaceMesh import genSurfaceMesh
-from .exportSurface import exportSurface
-from .genToolMeshWithOffsets import genToolMeshWithOffsets
+# pylint: disable=C0103
+""" Ultra-precision surface simulation in python """
+from .apply_mesh_tool_to_workpiece import apply_mesh_tool_to_workpiece
+from .combine_surface import combine_surface
+from .export_surface import export_surface
+from .gen_surface_mesh import gen_surface_mesh
+from .gen_tool_mesh_with_offsets import gen_tool_mesh_with_offsets
 from .helpers import pairwise, round_up_to_base
+from .mesh_tool_fly_cut import MeshToolFlyCut
+from .slice_surface import slice_surface
+
+# compatability imports
+# from .combine_surface import combine_surface as combineSurface  # pylint: disable=W0404
+# from .apply_mesh_tool_to_workpiece import apply_mesh_tool_to_workpiece as applyMeshToolToWorkpiece  # pylint: disable=W0404
+# from .export_surface import export_surface as exportSurface  # pylint: disable=W0404
+# from .gen_surface_mesh import gen_surface_mesh as genSurfaceMesh  # pylint: disable=W0404
+# from .gen_tool_mesh_with_offsets import gen_tool_mesh_with_offsets as genToolMeshWithOffsets  # pylint: disable=W0404
+# from .mesh_tool_fly_cut import MeshToolFlyCut as meshToolFlyCut  # pylint: disable=W0404
+# from .slice_surface import slice_surface as sliceSurface  # pylint: disable=W0404

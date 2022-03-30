@@ -29,17 +29,17 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 import numpy as np
 
 
-def combineSurface(slicedSurface, xDiv, yDiv):
+def combine_surface(sliced_surface, x_div, y_div):
     """
     Combine several patches to a common surface.
 
     Parameters
     ----------
-    slicedSurface : list of list of numpy arrays
+    sliced_surface : list of list of numpy arrays
         A list of surface patches (each patch is a list of numpy arrays).
-    xDiv : int
+    x_div : int
         Number of patches in X.
-    yDiv : int
+    y_div : int
         Number of patches in Y.
 
     Raises
@@ -60,31 +60,32 @@ def combineSurface(slicedSurface, xDiv, yDiv):
     v1.0, 2021-10-21: initial release
     v1.1, 2022-03-15: sort list before combination to avoid concurrency issues
     """
-    if len(slicedSurface) != xDiv * yDiv:
+    if len(sliced_surface) != x_div * y_div:
         raise ValueError
 
-    ndim, _, _ = np.shape(slicedSurface[0])
-    combinedSurface = list()
+    ndim, _, _ = np.shape(sliced_surface[0])
+    combined_surface = list()
     
     # get x and y start points of all slices
-    startPointsXY = np.array([(thisslice[0][0, 0], thisslice[1][0, 0]) 
-                              for thisslice in slicedSurface])
+    start_points_xy = np.array([(thisslice[0][0, 0], thisslice[1][0, 0]) 
+                               for thisslice in sliced_surface])
     # build record for sorting
-    r = np.core.records.fromarrays([startPointsXY[:, 0],
-                                    startPointsXY[:, 1]], names='a,b')
-    # sort slicedSurface list according to sorted record
-    slicedSurface[:] = [slicedSurface[i] for i in r.argsort().astype(int)]
+    record = np.core.records.fromarrays([start_points_xy[:, 0],
+                                      start_points_xy[:, 1]], names='a,b')
+    # sort sliced_surface list according to sorted record
+    sliced_surface[:] = [sliced_surface[i] 
+                        for i in record.argsort().astype(int)]
     
-    for nd in range(ndim):
-        dslice = [d[nd] for d in slicedSurface]
+    for k in range(ndim):
+        dslice = [d[k] for d in sliced_surface]
 
         rows = []  # initialize new list
 
-        for i in range(yDiv):
+        for i in range(y_div):
             # concatenate portion of slided surface
-            combined = np.vstack(dslice[i * xDiv:(i + 1) * xDiv])
+            combined = np.vstack(dslice[i * x_div:(i + 1) * x_div])
             rows.append(combined)
 
-        combinedSurface.append(np.hstack(rows))  # combine all rows
+        combined_surface.append(np.hstack(rows))  # combine all rows
     
-    return combinedSurface
+    return combined_surface

@@ -29,39 +29,42 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 import unittest
 
 import numpy as np
-from PySurfSim import combineSurface, pairwise
+from PySurfSim import combine_surface, pairwise
 
 
-class test_combineSurface(unittest.TestCase):
+class TestCombineSurface(unittest.TestCase):
+    """ Test cases for combination of surface patches """
     def test(self):
-        xLen = 0.140e6
-        yLen = 0.210e6
-        zHei = 40.0
-        res = 100
-        numSliceX = 10
-        numSliceY = 7
+        """ standard test case """
+        limits = {'x': 0.140e6,
+                  'y': 0.210e6,
+                  'z': 40.0,
+                  'res': 100}
         
-        xVec = np.arange(0.0, xLen + res, res)
-        yVec = np.arange(0.0, yLen + res, res)
-        surf_mesh_org = np.meshgrid(xVec, yVec)
-        surf_mesh_org.append(np.ones(np.shape(surf_mesh_org[0])) * zHei)
+        num_slice_x = 10
+        num_slice_y = 7
         
-        slicedSurface = list()
+        x_vec = np.arange(0.0, limits['x'] + limits['res'], limits['res'])
+        y_vec = np.arange(0.0, limits['y'] + limits['res'], limits['res'])
+        surf_mesh_org = np.meshgrid(x_vec, y_vec)
+        surf_mesh_org.append(np.ones(np.shape(surf_mesh_org[0])) * limits['z'])
+        
+        sliced_surface = []
         # get dim. of surface to slice
-        [_, numX, numY] = np.shape(surf_mesh_org)
+        [_, num_x, num_y] = np.shape(surf_mesh_org)
         
         # create divions in 1st dim.
-        a = np.floor(np.linspace(0, numX, numSliceX + 1)).astype(int)
+        div_a = np.floor(np.linspace(0, num_x, num_slice_x + 1)).astype(int)
         # create divions in 2nd dim.
-        b = np.floor(np.linspace(0, numY, numSliceY + 1)).astype(int)
+        div_b = np.floor(np.linspace(0, num_y, num_slice_y + 1)).astype(int)
 
-        for (b1, b2) in pairwise(b):    
-            for (a1, a2) in pairwise(a):
-                thisslice = [sliceElement[a1:a2, b1:b2]
+        for (b_1, b_2) in pairwise(div_b):    
+            for (a_1, a_2) in pairwise(div_a):
+                thisslice = [sliceElement[a_1:a_2, b_1:b_2]
                              for sliceElement in surf_mesh_org]
-                slicedSurface.append(thisslice)
+                sliced_surface.append(thisslice)
         
-        surf_mesh = combineSurface(slicedSurface, numSliceX, numSliceY)
+        surf_mesh = combine_surface(sliced_surface, num_slice_x, num_slice_y)
         
         self.assertTrue(isinstance(surf_mesh, list), 'input is not a list')
         self.assertEqual(len(surf_mesh), 3, 
@@ -69,7 +72,7 @@ class test_combineSurface(unittest.TestCase):
         self.assertTrue(all(isinstance(item, np.ndarray) 
                             for item in surf_mesh),
                         'elements are not arrays')
-        self.assertTrue(all(item.shape == (numX, numY)
+        self.assertTrue(all(item.shape == (num_x, num_y)
                             for item in surf_mesh),
                         'elements are not arrays')
 

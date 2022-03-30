@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Unit test for surface slicing.
+Unit test for tool mesh generation.
 
 Copyright (C) 2022  Lars Schönemann
 
@@ -28,38 +28,29 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 """
 import unittest
 import numpy as np
-from PySurfSim import sliceSurface
+import PySurfSim
+from PySurfSim import MeshToolFlyCut
 
 
-class test_sliceSurface(unittest.TestCase):
+
+class TestMeshToolFlyCut(unittest.TestCase):
+    """ Test cases for fly-cutting tool """
     def test(self):
-        xLen = 0.140e6
-        yLen = 0.210e6
-        zHei = 40.0
-        res = 100
+        """ standard test case """
+        x_vec = np.arange(0.0, 0.140e6, 100)
+        y_vec = np.arange(0.0, 0.210e6, 100)
+        surf_mesh = np.meshgrid(x_vec, y_vec)
         
-        numSliceX = 7
-        numSliceY = 10
-                
-        xVec = np.arange(0.0, xLen, res)
-        yVec = np.arange(0.0, yLen, res)
-        surf_mesh = np.meshgrid(xVec, yVec)
-        surf_mesh.append(np.ones(np.shape(surf_mesh[0])) * zHei)
+        tool_mesh = MeshToolFlyCut(r_fly=80e6, delta_r_fly=0.1, r_eps=0.8e6)
         
-        surf_slices = sliceSurface(surf_mesh, numSliceX, numSliceY)
+        self.assertIsInstance(tool_mesh, PySurfSim.MeshToolFlyCut)
         
-        self.assertTrue(isinstance(surf_slices, list), 'input is not a list')
-        self.assertEqual(len(surf_slices), int(numSliceX * numSliceY), 
-                         'wrong number of elements')
-        self.assertTrue(all(isinstance(item, list) 
-                            for item in surf_slices),
-                        'elements are not lists')
-        self.assertTrue(all(all(
-            isinstance(element, np.ndarray) 
-            for element in item) 
-            for item in surf_slices),
-            'elements are not lists')
+        f_p = tool_mesh.footprint([0.07e6, 0.104e6, 80e6])
+        self.assertEqual(np.shape(f_p), (2, 2))
 
+        t_z = tool_mesh.get_z(surf_mesh, [70e3, 104e3, 60e6])
+        self.assertEqual(t_z.shape, (210e3 / 100, 140e3 / 100))
+        
 
 if __name__ == '__main__':
     unittest.main()

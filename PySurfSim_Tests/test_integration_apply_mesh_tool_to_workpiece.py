@@ -25,11 +25,12 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           Badgasteiner Straße 2
           28359 Bremen
           Germany
+@version: 1.2
 """
 import unittest
 
 import numpy as np
-from PySurfSim import applyMeshToolToWorkpiece, meshToolFlyCut
+from PySurfSim import apply_mesh_tool_to_workpiece, MeshToolFlyCut
 
 
 class TestIntApplyMeshToolToWorkpiece(unittest.TestCase):
@@ -50,10 +51,10 @@ class TestIntApplyMeshToolToWorkpiece(unittest.TestCase):
             # initial surface height in nm (less height means less computation 
             # time, as the "footprint" of the flycutter is determined using 
             # this value
-            'limZ': 100.0,       
+            'lim_z': 100.0,       
             'raster': 100.0,    # raster spacing of simulated surface
             'numpoints': 1024,  # numer of points
-            'fixedNumPoints': True,
+            'fixed_num_points': True,
             'visualize': True}  # do we want to plot the result?
         
         x_vec = np.arange(0.0, 0.140e6, 100)
@@ -64,9 +65,9 @@ class TestIntApplyMeshToolToWorkpiece(unittest.TestCase):
         tool_mesh = np.meshgrid([70e3], [105e3])
         tool_mesh.append(np.ones(np.shape(tool_mesh[0])) * 60e6)
         
-        tool = meshToolFlyCut(**parameters)
+        tool = MeshToolFlyCut(**parameters)
         
-        new_mesh = applyMeshToolToWorkpiece(surf_mesh, tool_mesh, tool)
+        new_mesh = apply_mesh_tool_to_workpiece(surf_mesh, tool_mesh, tool)
         
         self.assertTrue(isinstance(new_mesh, list), 'input is not a list')
         self.assertEqual(len(new_mesh), 3, 'wrong number of elements')

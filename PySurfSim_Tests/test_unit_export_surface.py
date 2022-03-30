@@ -31,7 +31,7 @@ import unittest
 from pathlib import Path
 
 import numpy as np
-from PySurfSim import exportSurface
+from PySurfSim import export_surface
 
 
 class TestUnitExportSurface(unittest.TestCase):
@@ -56,7 +56,7 @@ class TestUnitExportSurface(unittest.TestCase):
         surf_mesh = np.meshgrid(x_vec, y_vec)
         surf_mesh.append(np.ones(np.shape(surf_mesh[0])) * self.z_height)
 
-        exportSurface('test.asc', surf_mesh)
+        export_surface('test.asc', surf_mesh)
         
         self.assertTrue(Path('test.asc').is_file(), 'no file created')
         

@@ -30,14 +30,15 @@ import random
 import unittest
 
 import numpy as np
-from PySurfSim import combineSurface, genSurfaceMesh, sliceSurface
+from PySurfSim import combine_surface, gen_surface_mesh, slice_surface
 
 
-class test_surface_slicing(unittest.TestCase):
+class TestSurfaceSlicing(unittest.TestCase):
+    """ Test cases for surface slicing """
     def setUp(self):
-        self.surf_mesh = genSurfaceMesh(
+        self.surf_mesh = gen_surface_mesh(
             100e3, 75e3, 40.0, 
-            (1000, 500), fixedNumPoints=False)
+            (1000, 500), fixed_num_points=False)
     
     def test(self):
         """
@@ -49,9 +50,9 @@ class test_surface_slicing(unittest.TestCase):
         None.
 
         """
-        surf_mesh_slices = sliceSurface(
+        surf_mesh_slices = slice_surface(
             self.surf_mesh, 5, 10)
-        combined_mesh = combineSurface(
+        combined_mesh = combine_surface(
             surf_mesh_slices, 5, 10)
         
         self.assertTrue(np.array_equal(org_mesh_part, com_mesh_part)
@@ -68,12 +69,12 @@ class test_surface_slicing(unittest.TestCase):
         None.
 
         """
-        surf_mesh_slices = sliceSurface(
+        surf_mesh_slices = slice_surface(
             self.surf_mesh, 5, 10)
         # randomize slice order
         surf_mesh_slices = random.sample(surf_mesh_slices, 
                                          k=len(surf_mesh_slices))
-        combined_mesh = combineSurface(
+        combined_mesh = combine_surface(
             surf_mesh_slices, 5, 10)
         
         self.assertTrue(np.array_equal(org_mesh_part, com_mesh_part)

@@ -31,8 +31,8 @@ from timeit import default_timer as timer
 
 import numpy as np
 from joblib import Parallel, delayed, parallel_backend
-from PySurfSim import (applyMeshToolToWorkpiece, combineSurface,
-                       genSurfaceMesh, meshToolFlyCut, sliceSurface)
+from PySurfSim import (apply_mesh_tool_to_workpiece, combine_surface,
+                       gen_surface_mesh, MeshToolFlyCut, slice_surface)
 
 
 class TestParallelProcessing(unittest.TestCase):
@@ -63,9 +63,9 @@ class TestParallelProcessing(unittest.TestCase):
         self.n_jobs = 8
         print(f'Parallel jobs {self.n_jobs}')
         
-        self.surf_mesh = genSurfaceMesh(
+        self.surf_mesh = gen_surface_mesh(
             parameters['limX'], parameters['limY'], parameters['limZ'], 
-            parameters['numpoints'], fixedNumPoints=parameters['fixedNumPoints'])
+            parameters['numpoints'], fixed_num_points=parameters['fixedNumPoints'])
         
         # calculate tool position
         # number of discrete tool positions in X
@@ -82,14 +82,14 @@ class TestParallelProcessing(unittest.TestCase):
         self.tool_mesh.append(
             np.ones(np.shape(self.tool_mesh[0])) * tool_center_z)
         
-        self.tool = meshToolFlyCut(**parameters)
+        self.tool = MeshToolFlyCut(**parameters)
     
     def test(self):
         """ Test if normal and parallel processing yields the same results """
         # %% normal execution
         print('Calculating normally')
         start_time_normal = timer()
-        new_mesh_normal = applyMeshToolToWorkpiece(self.surf_mesh, 
+        new_mesh_normal = apply_mesh_tool_to_workpiece(self.surf_mesh, 
                                                    self.tool_mesh, 
                                                    self.tool)
         end_time_normal = timer()
@@ -99,14 +99,14 @@ class TestParallelProcessing(unittest.TestCase):
         # %% parallel execution
         print('Calculating in parallel')
         start_time_parallel = timer()
-        surf_mesh_slices = sliceSurface(
+        surf_mesh_slices = slice_surface(
             self.surf_mesh, self.n_jobs, self.n_jobs)
         new_mesh_slices = []
         with parallel_backend('loky', n_jobs=self.n_jobs):
-            new_mesh_slices = Parallel()(delayed(applyMeshToolToWorkpiece)(
+            new_mesh_slices = Parallel()(delayed(apply_mesh_tool_to_workpiece)(
                 surf_mesh_slice, self.tool_mesh, self.tool) 
                 for surf_mesh_slice in surf_mesh_slices)
-        new_mesh_parallel = combineSurface(
+        new_mesh_parallel = combine_surface(
             new_mesh_slices, self.n_jobs, self.n_jobs)
         
         end_time_parallel = timer()

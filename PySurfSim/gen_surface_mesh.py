@@ -29,8 +29,8 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 import numpy as np
 
 
-def genSurfaceMesh(dX, dY, zHeight=40.0,
-                   resolution=100.0, fixedNumPoints=False):
+def gen_surface_mesh(d_x, d_y, z_height=40.0,
+                     resolution=100.0, fixed_num_points=False):
     """
     Generate a surface mesh.
 
@@ -55,22 +55,22 @@ def genSurfaceMesh(dX, dY, zHeight=40.0,
         Generated surface mesh.
 
     """
-    rShape = np.shape(resolution)
-    if rShape == (2,):
-        rX = resolution[0]
-        rY = resolution[1]
-    elif rShape == ():
-        rX = rY = resolution
+    r_shape = np.shape(resolution)
+    if r_shape == (2,):
+        r_x = resolution[0]
+        r_y = resolution[1]
+    elif r_shape == ():
+        r_x = r_y = resolution
     else:
         raise ValueError('Resolution should be single value or tuple, '
-                         f'is {rShape}')
+                         f'is {r_shape}')
     
-    if fixedNumPoints:
-        xVec = np.linspace(0.0, dX, rX)
-        yVec = np.linspace(0.0, dY, rY)
+    if fixed_num_points:
+        x_vec = np.linspace(0.0, d_x, r_x)
+        y_vec = np.linspace(0.0, d_y, r_y)
     else:
-        xVec = np.arange(0.0, dX + rX, rX)
-        yVec = np.arange(0.0, dY + rY, rY)
-    mygrid = np.meshgrid(xVec, yVec)
-    mygrid.append(np.ones(np.shape(mygrid[0])) * zHeight)
+        x_vec = np.arange(0.0, d_x + r_x, r_x)
+        y_vec = np.arange(0.0, d_y + r_y, r_y)
+    mygrid = np.meshgrid(x_vec, y_vec)
+    mygrid.append(np.ones(np.shape(mygrid[0])) * z_height)
     return mygrid

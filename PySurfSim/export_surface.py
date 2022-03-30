@@ -25,13 +25,13 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           Badgasteiner Straße 2
           28359 Bremen
           Germany
-@version: 1.0
+@version: 1.2
 @date: 2021-11-08
 """
 import numpy as np
 
 
-def exportSurface(filename, surfMesh):
+def export_surface(filename, surf_mesh):
     """
     Export a simulated surface to a SPIP-readable ASCII file.
 
@@ -49,20 +49,20 @@ def exportSurface(filename, surfMesh):
     """
     with open(filename, 'w', newline='\r\n',
               encoding='utf-8') as fid:  # open file for writing
-        shapeZ = np.shape(surfMesh)
+        shape_z = np.shape(surf_mesh)
         # Write header
         fid.write('# File Format = ASCII\n')
         fid.write('# Created by Python\n')
         fid.write('# Original file: \n')
         fid.write('# forcecurve = 0\n')
         # number of pixel in X:
-        fid.write(f'# x-pixels = {shapeZ[2]}\n')
+        fid.write(f'# x-pixels = {shape_z[2]}\n')
         # number of pixel in Y:
-        fid.write(f'# y-pixels = {shapeZ[1]}\n')
+        fid.write(f'# y-pixels = {shape_z[1]}\n')
         # length in X, i.e. last point of meshX:
-        fid.write(f'# x-length = {surfMesh[0][-1][-1]:0.0f}\n')
+        fid.write(f'# x-length = {surf_mesh[0][-1][-1]:0.0f}\n')
         # length in Y, i.e. last point of meshY
-        fid.write(f'# y-length = {surfMesh[1][-1][-1]:0.0f}\n')
+        fid.write(f'# y-length = {surf_mesh[1][-1][-1]:0.0f}\n')
         fid.write('# x-offset = 0\n')
         fid.write('# y-offset = 0\n')
         fid.write('# z-unit = nm\n')  # alles values in nm!
@@ -74,9 +74,9 @@ def exportSurface(filename, surfMesh):
         fid.write('# Start of Data:\n')
 
         # iterate over rows and columns of surface
-        for i in range(shapeZ[1]):
-            for j in range(shapeZ[2]):
+        for i in range(shape_z[1]):
+            for j in range(shape_z[2]):
                 # write surface point
-                fid.write(f'{surfMesh[2][i, j]:.8f}\t')
+                fid.write(f'{surf_mesh[2][i, j]:.8f}\t')
 
             fid.write('\n')  # write EOL
