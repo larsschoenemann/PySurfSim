@@ -25,6 +25,8 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           Badgasteiner Straße 2
           28359 Bremen
           Germany
+@version: 1.2
+@date:    2022-03-31
 """
 import numpy as np
 

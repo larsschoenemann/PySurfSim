@@ -25,13 +25,18 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           Badgasteiner Straße 2
           28359 Bremen
           Germany
+@version: 1.2
+@date:    2022-03-31
 """
 import numpy as np
 
 
 class MeshToolFlyCut:
-    """Class for a fly-cutting tool."""
-    
+    """Class for a fly-cutting tool.
+
+    Returns:
+        MeshToolFlyCut: Class for a flycutting tool.
+    """
     r_fly = None
     delta_r_fly = None
     r_eps = None
@@ -41,36 +46,20 @@ class MeshToolFlyCut:
         self.delta_r_fly = kwargs.get('delta_r_fly', 0.0)
         self.r_eps = kwargs.get('r_eps', 0.762e6)
     
-    def get_z(self, surf_mesh, tool_pos):
+    def get_z(self, target_mesh, tool_pos):
+        """Tool geometry of a fly-cutter over a given surface.
+
+        Args:
+            target_mesh (list of numpy arrays, float): support points for tool heightmap
+                                                       e.g- X and Y meshes of a surface 
+                                                       (only array pos [0] and [1] is considered).
+            tool_pos (list of numpy arrays): Postion of the tool center points in X, Y and Z.
+
+        Returns:
+            array of float:  Tool height map.
         """
-        Tool geometry of a fly-cutter over a given surface.
-    
-        Parameters
-        ----------
-        surf_mesh : list of numpy arrays, float
-            X and Y meshes of a surface (Z mesh is ignored).
-        tool_pos : list of numpy arrays
-            Postion of the tool center points in X, Y and Z.
-        rFly : float
-            Nominal fly-cut radius (r_{fly}).
-        drFly : float
-            Deviation to nominal flycut radius (Delta r_{fly}).
-        rEps : float
-            Nose radius (r_epsilon).
-    
-        Returns
-        -------
-        zT : array of float
-            Tool height map (z_T).
-    
-    
-        (c)2021,
-        Dr.-Ing. Lars Schoenemann, schoenemann@iwt-bremen.de,
-        Leibniz Institute for Materials Engineering IWT, Bremen, Germany
-        v1.0, 2021-10-21
-        """
-        mesh_x = surf_mesh[0]
-        mesh_y = surf_mesh[1]
+        mesh_x = target_mesh[0]
+        mesh_y = target_mesh[1]
     
         x_m = tool_pos[0]
         y_m = tool_pos[1]
@@ -87,29 +76,14 @@ class MeshToolFlyCut:
         return z_t
 
     def footprint(self, tool_pos, lim_z=40.0):
-        """
-        Generate a tool footprint.
+        """Get tool footprint.
 
-        Parameters
-        ----------
-        tool_pos : TYPE
-            DESCRIPTION.
-        rFly : TYPE, optional
-            DESCRIPTION. The default is 60*1E6.
-        deltaRfly : TYPE, optional
-            DESCRIPTION. The default is 0.
-        rEps : TYPE, optional
-            DESCRIPTION. The default is 0.762*1E6.
-        limZ : TYPE, optional
-            DESCRIPTION. The default is 40.0.
+        Args:
+            tool_pos (array, float): Position of the tool in x,y,z
+            lim_z (float, optional): Limiting height in z. Defaults to 40.0.
 
-        Returns
-        -------
-        xLim : TYPE
-            DESCRIPTION.
-        yLim : TYPE
-            DESCRIPTION.
-
+        Returns:
+            float, float: limits of tool engagement in x and y
         """
         r_1 = self.r_fly + self.delta_r_fly  # first radius
         r_2 = self.r_eps  # second radius

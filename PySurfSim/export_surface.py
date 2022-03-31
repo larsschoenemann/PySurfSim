@@ -26,26 +26,19 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           28359 Bremen
           Germany
 @version: 1.2
-@date: 2021-11-08
+@date: 2022-03-31
 """
 import numpy as np
 
 
 def export_surface(filename, surf_mesh):
-    """
-    Export a simulated surface to a SPIP-readable ASCII file.
+    """Export a simulated surface to a SPIP-readable ASCII file.
 
-    Parameters
-    ----------
-    filename :  string/path
-        filename or path to which the surface shall be exported as ASCII.
-    surfMesh : list of meshes
-        Meshes of the surface to be exported (X- & Y-meshes plus heights in Z).
-
-    Returns
-    -------
-    None.
-
+    Args:
+        filename (string or path): filename or path to which 
+                                   the surface shall be exported as ASCII.
+        surf_mesh (list of meshgrids): Meshes of the surface to be exported 
+                                       (X- & Y-meshes plus heights in Z).
     """
     with open(filename, 'w', newline='\r\n',
               encoding='utf-8') as fid:  # open file for writing

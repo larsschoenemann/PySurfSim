@@ -25,50 +25,56 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           Badgasteiner Straße 2
           28359 Bremen
           Germany
+@version: 1.2.1
+@date:    2022-03-31
 """
 import numpy as np
 
 
-def gen_tool_mesh_with_offsets(
-    lim_x, feed_x, shift_f, 
-    lim_y, raster_y, shift_r, 
-    r_fly,
-    x0_pos, tool_offsets):
+def gen_tool_mesh_with_offsets(*args):
+    """Generate a milling tool mesh including live axis offsets
+
+    Args:
+        lim_x (float): _description_
+        feed_x (float): _description_
+        shift_f (float): _description_
+        lim_y (float): _description_
+        raster_y (float): _description_
+        shift_r (float): _description_
+        r_fly (float): _description_
+        x0_pos (float): _description_
+        tool_offsets (float): _description_
+
+    Returns:
+        _type_: _description_
     """
-    .
+    if len(args) != 9:
+        raise ValueError('Incorrect number of args')
+    
+    feed_x = {'lim': args[0],
+              'feed': args[1],
+              'feed_shift': args[2]}
+    raster_y = {'lim': args[3],
+                'raster': args[4],
+                'raster_shift': args[5]}
+    
+    r_fly = args[6]
+    x0_pos = args[7]
+    tool_offsets = args[8]
 
-    Parameters
-    ----------
-    surf_mesh : TYPE
-        DESCRIPTION.
-    p : TYPE
-        DESCRIPTION.
-    x0_pos : TYPE
-        DESCRIPTION.
-    tool_offsets : TYPE
-        DESCRIPTION.
-
-    Returns
-    -------
-    TYPE
-        DESCRIPTION.
-    tool_mesh : TYPE
-        DESCRIPTION.
-
-    """
     # calculate tool position
-    num_x = np.min((np.ceil(lim_x / feed_x) + 1,
+    num_x = np.min((np.ceil(feed_x['lim'] / feed_x['feed']) + 1,
                    len(tool_offsets['z'])))  
     # no discrete tool pos. in X
     
-    if raster_y > 0:
+    if raster_y['raster'] > 0:
         # no discrete tool pos. in Y
-        num_y = np.ceil(lim_y / raster_y) + 1  
+        num_y = np.ceil(raster_y['lim'] / raster_y['raster']) + 1  
     else:
         num_y = 1
     
-    tool_center_x = np.arange(num_x) * feed_x + shift_f
-    tool_center_y = np.arange(num_y) * raster_y + shift_r
+    tool_center_x = np.arange(num_x) * feed_x['feed'] + feed_x['feed_shift']
+    tool_center_y = np.arange(num_y) * raster_y['raster'] + raster_y['raster_shift']
     tool_center_z = r_fly
     
     tool_mesh = np.meshgrid(tool_center_x, tool_center_y)

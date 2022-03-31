@@ -25,26 +25,21 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           Badgasteiner Straße 2
           28359 Bremen
           Germany
+@version: 1.2
+@date:    2022-03-31
 """
 from itertools import tee
 
 
-def round_up_to_base(num, base=10):
-    """
-    Round a number up to a specified base.
+def round_up_to_base(num, base=10.0):
+    """Round a number up to a specified base.
 
-    Parameters
-    ----------
-    num : float
-        the number.
-    base : float, optional
-        the base. The default is 10.
+    Args:
+        num (float): the number.
+        base (float, optional): the base. Defaults to 10.0.
 
-    Returns
-    -------
-    float
-        rounded number.
-
+    Returns:
+        float: rounded number.
     """
     return num + (base - num) % base
 
@@ -62,23 +57,22 @@ def default_parameters():
     um = 1e3  #pylint: disable=C0103
     mm = 1e6  #pylint: disable=C0103
     
-    param = {
-        'rasterY': 8 * um,   # feed in raster direction in nm
-        'feedX': 70 * um,    # feed in cutting direction in nm
-        'rFly': 60 * mm,     # flycut radius in nm
-        'rEps': 0.762 * mm,  # tool nose radius in nm
+    return {
+        'raster_y': 8 * um,   # feed in raster direction in nm
+        'feed_x': 70 * um,    # feed in cutting direction in nm
+        'r_fly': 60 * mm,     # flycut radius in nm
+        'r_eps': 0.762 * mm,  # tool nose radius in nm
         # deviation in flycut radius to nominal value in nm
-        'deltaRfly': 0.0 * nm,   
+        'delta_r_fly': 0.0 * nm,   
         # shift of tool in feed direction (necessary for second tool)
-        'shiftF': 0.0 * nm,      
-        'limX': 0.334833 * mm,   # limits of simulated surface in X in nm
-        'limY': 0.334618 * mm,   # limits of simulated surface in Y in nm
+        'shift_f': 0.0 * nm,      
+        'lim_x': 0.334833 * mm,   # limits of simulated surface in X in nm
+        'lim_y': 0.334618 * mm,   # limits of simulated surface in Y in nm
         # initial surface height in nm (less height means less computation 
         # time, as the "footprint" of the flycutter is determined using 
         # this value
-        'limZ': 100.0 * nm,       
+        'lim_z': 100.0 * nm,       
         'raster': 100.0 * nm,    # raster spacing of simulated surface
         'numpoints': 1024,  # numer of points
-        'fixedNumPoints': True,
+        'fixed_num_points': True,
         'visualize': True}  # do we want to plot the result?
-    return param

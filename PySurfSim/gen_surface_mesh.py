@@ -25,36 +25,33 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           Badgasteiner Straße 2
           28359 Bremen
           Germany
+@version: 1.2
+@date:    2022-03-31
 """
 import numpy as np
 
 
 def gen_surface_mesh(d_x, d_y, z_height=40.0,
                      resolution=100.0, fixed_num_points=False):
+    """Generate a surface mesh.
+
+    Args:
+        d_x (float): Dimension in x.
+        d_y (float): Dimension in y.
+        z_height (float, optional): Initial surface height. Defaults to 40.0.
+        resolution (float, optional): treated as interval (fixedNumPoints=False)
+                                      or as number of points (fixedNumPoints=True).
+                                      Defaults to 100.0.
+        fixed_num_points (bool, optional): Use fixed number of points (False) or resolution (True). 
+                                           Defaults to False.
+
+    Raises:
+        ValueError: Error if wrong resolution was passed.
+
+    Returns:
+        meshgrid: Generated surface mesh.
     """
-    Generate a surface mesh.
-
-    Parameters
-    ----------
-    dX : float
-        Dimension in x.
-    dY : float
-        Dimension in y.
-    zHeight : float, optional
-        Initial surface height. The default is 40.0.
-    resolution : float, optional
-        resolution is either treated as interval (fixedNumPoints=False)
-        or as number of points (fixedNumPoints=True). The default is 100.0.
-    fixedNumPoints : bool, optional
-        Use fixed number of points (False) or resolution (True). 
-        The default is False.
-
-    Returns
-    -------
-    mygrid : meshgrid
-        Generated surface mesh.
-
-    """
+    
     r_shape = np.shape(resolution)
     if r_shape == (2,):
         r_x = resolution[0]

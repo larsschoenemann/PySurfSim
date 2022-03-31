@@ -25,37 +25,32 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           Badgasteiner Straße 2
           28359 Bremen
           Germany
+@version: 1.2
+@date:    2022-03-31
 """
-
 import numpy as np
 from PySurfSim.helpers import pairwise
 
 
 def slice_surface(surface_to_slice, x_div, y_div):
-    """
-    Split a meshed surface into smaller patches.
+    """Split a meshed surface into smaller patches.
 
-    Parameters
-    ----------
-    surface_to_slice : list of arrays, float
-        A list of 3 numpy arrays (X, Y and Z) with X and Y defining the surface
-        grid and Z defining the height at each point of the grid.
-    x_div : int
-        No of patches in X-direction.
-    y_div : int
-        No of patches in Y-direction.
+    Args:
+        surface_to_slice (list of arrays, float): A list of 3 numpy arrays 
+            (X, Y and Z) with X and Y defining the surface grid and Z 
+            defining the height at each point of the grid.
+        x_div (int): No of patches in X-direction.
+        y_div (int): No of patches in Y-direction.
 
-    Returns
-    -------
-    sliced_surface : list of arrays, float
-        Returns a list of xDiv*yDiv patches containing slices of the original
-        meshed surface.
+    Raises:
+        ValueError: Division in x 0 or negative
+        ValueError: Division in y 0 or negative
+        ValueError: More divisions than length in x
+        ValueError: More divisions than length in y
 
-
-    (c)2021,
-    Dr.-Ing. Lars Schoenemann, schoenemann@iwt-bremen.de,
-    Leibniz Institute for Materials Engineering IWT, Bremen, Germany
-    v1.0, 2021-10-21
+    Returns:
+        list of arrays, float: A list of xDiv*yDiv patches
+            containing slices of the original meshed surface.
     """
     if x_div <= 0:
         raise ValueError(f'division in x cannot be 0 or negative (is {x_div})')

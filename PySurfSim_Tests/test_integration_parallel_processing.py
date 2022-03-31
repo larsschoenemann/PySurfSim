@@ -25,57 +25,49 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           Badgasteiner Straße 2
           28359 Bremen
           Germany
+@version: 1.2
+@date:    2022-03-31
 """
 import unittest
 from timeit import default_timer as timer
 
 import numpy as np
 from joblib import Parallel, delayed, parallel_backend
-from PySurfSim import (apply_mesh_tool_to_workpiece, combine_surface,
-                       gen_surface_mesh, MeshToolFlyCut, slice_surface)
+from PySurfSim import (MeshToolFlyCut, apply_mesh_tool_to_workpiece,
+                       combine_surface, default_parameters, gen_surface_mesh,
+                       slice_surface)
 
 
 class TestParallelProcessing(unittest.TestCase):
     """ Parallel processing test cases """
     def setUp(self):
         print('Setting up parallel test')
-        parameters = {
-            'rasterY': 8 * 1e3,   # feed in raster direction in nm
-            'feedX': 70 * 1e3,    # feed in cutting direction in nm
-            'rFly': 60 * 1E6,     # flycut radius in nm
-            'rEps': 0.762 * 1E6,  # tool nose radius in nm
-            # deviation in flycut radius to nominal value in nm
-            'deltaRfly': 0.0,   
-            # shift of tool in feed direction (necessary for second tool)
-            'shiftF': 0.0,      
-            'limX': 0.600e6,   # limits of simulated surface in X in nm
-            'limY': 0.600e6,   # limits of simulated surface in Y in nm
-            # initial surface height in nm (less height means less computation 
-            # time, as the "footprint" of the flycutter is determined using 
-            # this value
-            'limZ': 100.0,       
-            'raster': 100.0,    # raster spacing of simulated surface
-            'numpoints': 1024,  # numer of points
-            'fixedNumPoints': True,
-            'visualize': True}  # do we want to plot the result?
+        parameters = default_parameters().copy()
+        
+        # make surface bigger to see effect of parallel processing
+        parameters['lim_x'] = 0.800e6
+        parameters['lim_y'] = 0.800e6
+        parameters['raster'] = 100.0
+        parameters['fixed_num_points'] = False
+       
         self.parameters = parameters
         print(parameters)
         self.n_jobs = 8
         print(f'Parallel jobs {self.n_jobs}')
         
         self.surf_mesh = gen_surface_mesh(
-            parameters['limX'], parameters['limY'], parameters['limZ'], 
-            parameters['numpoints'], fixed_num_points=parameters['fixedNumPoints'])
+            parameters['lim_x'], parameters['lim_y'], parameters['lim_z'], 
+            parameters['numpoints'], fixed_num_points=parameters['fixed_num_points'])
         
         # calculate tool position
         # number of discrete tool positions in X
-        num_x = np.ceil(parameters['limX'] / parameters['feedX']) + 1  
+        num_x = np.ceil(parameters['lim_x'] / parameters['feed_x']) + 1  
         # number of discrete tool positions in Y
-        num_y = np.ceil(parameters['limY'] / parameters['rasterY']) + 1  
+        num_y = np.ceil(parameters['lim_y'] / parameters['raster_y']) + 1  
 
-        tool_center_x = np.arange(num_x) * parameters['feedX'] + parameters['shiftF']
-        tool_center_y = np.arange(num_y) * parameters['rasterY']
-        tool_center_z = parameters['rFly']
+        tool_center_x = np.arange(num_x) * parameters['feed_x'] + parameters['shift_f']
+        tool_center_y = np.arange(num_y) * parameters['raster_y']
+        tool_center_z = parameters['r_fly']
         
         # tool_mesh = np.meshgrid(toolCenterX, toolCenterY, toolCenterZ)
         self.tool_mesh = np.meshgrid(tool_center_x, tool_center_y)

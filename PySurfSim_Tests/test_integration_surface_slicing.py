@@ -25,6 +25,8 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
           Badgasteiner Straße 2
           28359 Bremen
           Germany
+@version: 1.2
+@date:    2022-03-31
 """
 import random
 import unittest
@@ -42,13 +44,6 @@ class TestSurfaceSlicing(unittest.TestCase):
     
     def test(self):
         """
-        Test if normal and parallel processing yields the same results.
-        (First test case with unaltered list)
-
-        Returns
-        -------
-        None.
-
         """
         surf_mesh_slices = slice_surface(
             self.surf_mesh, 5, 10)
@@ -60,8 +55,7 @@ class TestSurfaceSlicing(unittest.TestCase):
                         in zip(self.surf_mesh, combined_mesh))
         
     def test_randomized(self):
-        """
-        Test if normal and parallel processing yields the same results.
+        """Test if slicing and combination yields the original surface.
         (Second test case with randomized list)
 
         Returns
