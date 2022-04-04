@@ -29,6 +29,7 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 @date:    2022-03-31
 """
 from itertools import tee
+import numpy as np
 
 
 def round_up_to_base(num, base=10.0):
@@ -76,3 +77,28 @@ def default_parameters():
         'numpoints': 1024,  # numer of points
         'fixed_num_points': True,
         'visualize': True}  # do we want to plot the result?
+
+def get_surface_subset(surf_mesh, limits):
+    """Extract a subset from a surface at given limits
+
+    Args:
+        surf_mesh (list of meshgrids): the original surface (x, y and z meshgrid)
+        limits (list of tuples): limits in x and y
+
+    Returns:
+        list of meshgrids: subset meshgrid
+        tuple of slices: slice of subset in x and y
+    """
+    span = np.nonzero(np.bitwise_and.reduce((
+        surf_mesh[0] >= limits[0][0],
+        surf_mesh[0] <= limits[0][1],
+        surf_mesh[1] >= limits[1][0],
+        surf_mesh[1] <= limits[1][1]))
+    )
+
+    x_span = span[0][[0, -1]]
+    y_span = span[1][[0, -1]]
+    selection = (slice(x_span[0], x_span[1] + 1), slice(y_span[0], y_span[1] + 1))
+
+    return [mesh_part[selection] for mesh_part in surf_mesh], selection
+    
