@@ -66,6 +66,9 @@ def apply_mesh_tool_to_workpiece(patch_xyz, tool_pos, tool):
         
         subset, selection = get_surface_subset(patch_xyz, (x_lim, y_lim))
         
+        if subset is None:
+            continue
+
         min_z = np.minimum(
             surf_z[selection],
             tool.get_z(subset, [tool_center_x, tool_center_y, tool_center_z])

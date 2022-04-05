@@ -96,8 +96,12 @@ def get_surface_subset(surf_mesh, limits):
         surf_mesh[1] <= limits[1][1]))
     )
 
+    if span[0].size == 0 | span[1].size == 0:
+        return None, None
+
     x_span = span[0][[0, -1]]
     y_span = span[1][[0, -1]]
+    
     selection = (slice(x_span[0], x_span[1] + 1), slice(y_span[0], y_span[1] + 1))
 
     return [mesh_part[selection] for mesh_part in surf_mesh], selection
