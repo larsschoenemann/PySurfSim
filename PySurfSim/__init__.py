@@ -3,8 +3,8 @@
 """
 Ultra-precision surface simulation in python 
 
-Copyright (C) 2022  Lars SchÃ¶nemann
-Leibniz Institut fÃ¼r Werkstofforientierte Technologien IWT, Bremen, Germany
+Copyright (C) 2022  Lars Schönemann
+Leibniz Institut für Werkstofforientierte Technologien IWT, Bremen, Germany
 """
 from importlib.metadata import version, PackageNotFoundError
 
@@ -13,7 +13,7 @@ from .combine_surface import combine_surface
 from .export_surface import export_surface
 from .gen_surface_mesh import gen_surface_mesh
 from .gen_tool_mesh_with_offsets import gen_tool_mesh_with_offsets
-from .helpers import pairwise, round_up_to_base, default_parameters
+from .helpers import pairwise, round_up_to_base, default_parameters, get_surface_subset
 from .mesh_tool_fly_cut import MeshToolFlyCut
 from .slice_surface import slice_surface
 

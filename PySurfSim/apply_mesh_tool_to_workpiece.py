@@ -29,6 +29,7 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 @date:    2022-03-31
 """
 import numpy as np
+from .helpers import get_surface_subset
 
 
 def apply_mesh_tool_to_workpiece(patch_xyz, tool_pos, tool):
@@ -63,45 +64,17 @@ def apply_mesh_tool_to_workpiece(patch_xyz, tool_pos, tool):
                 f'Z{tool_center_z:.6f}: tool not engaged'))
             continue
         
-        mask = np.bitwise_and.reduce((patch_xyz[0] >= x_lim[0],
-                                      patch_xyz[0] <= x_lim[1],
-                                      patch_xyz[1] >= y_lim[0],
-                                      patch_xyz[1] <= y_lim[1]))
+        subset, selection = get_surface_subset(patch_xyz, (x_lim, y_lim))
         
-        # apply mask to surface patch (X-coordinates)
-        subset_x = patch_xyz[0][mask]
-        if len(subset_x) == 0:
+        if subset is None:
             continue
-                        
-        # get start and end indices of rectangular mask
-        # [inXstart, inYstart] = find(mask, 1, 'first')
-        indices = np.where(mask)
-        [in_x_start, in_y_start] = [indices[0][0], indices[1][0]]
-        # [inXend, inYend] = find(mask, 1, 'last')
-        [in_x_end, in_y_end] = [indices[0][-1], indices[1][-1]]
-        
-        # reshape subset to original mask shape
-        subset_x = np.reshape(subset_x, 
-                              (in_x_end - in_x_start + 1, 
-                               in_y_end - in_y_start + 1))
-        
-        # apply mask to surface patch (Y-coordinates)
-        # should not be empty as subsetX was not empty
-        subset_y = patch_xyz[1][mask] 
-        # reshape subset to original mask shape
-        subset_y = np.reshape(subset_y, 
-                              (in_x_end - in_x_start + 1, 
-                               in_y_end - in_y_start + 1))
-        
-        # calculate minimum of result zT and given surface height surfZ
+
         min_z = np.minimum(
-            np.reshape(surf_z[mask], 
-                       (in_x_end - in_x_start + 1, 
-                        in_y_end - in_y_start + 1)), 
-            tool.get_z([subset_x, subset_y],
-                       [tool_center_x, tool_center_y, tool_center_z]))
+            surf_z[selection],
+            tool.get_z(subset, [tool_center_x, tool_center_y, tool_center_z])
+        )
         
         # save minimum to surface
-        surf_z[in_x_start:in_x_end + 1, in_y_start:in_y_end + 1] = min_z
+        surf_z[selection] = min_z
     
     return [patch_xyz[0], patch_xyz[1], surf_z].copy()
