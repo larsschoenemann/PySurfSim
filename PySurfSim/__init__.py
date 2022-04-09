@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=C0103
-""" Ultra-precision surface simulation in python """
+"""
+Ultra-precision surface simulation in python 
+
+Copyright (C) 2022  Lars Schönemann
+Leibniz Institut für Werkstofforientierte Technologien IWT, Bremen, Germany
+"""
+from importlib.metadata import version, PackageNotFoundError
+
 from .apply_mesh_tool_to_workpiece import apply_mesh_tool_to_workpiece
 from .combine_surface import combine_surface
 from .export_surface import export_surface
@@ -18,3 +25,10 @@ from .slice_surface import slice_surface
 # from .gen_tool_mesh_with_offsets import gen_tool_mesh_with_offsets as genToolMeshWithOffsets  # pylint: disable=W0404
 # from .mesh_tool_fly_cut import MeshToolFlyCut as meshToolFlyCut  # pylint: disable=W0404
 # from .slice_surface import slice_surface as sliceSurface  # pylint: disable=W0404
+
+
+try:
+    __version__ = version('PySurfSim')
+except PackageNotFoundError:
+    # package is not installed
+    pass
