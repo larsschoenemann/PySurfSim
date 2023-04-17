@@ -70,5 +70,9 @@ if __name__ == '__main__':
     cb.data_range = (0, 25)
     cb.number_of_labels = int(np.ceil(25 / 5) + 1)
     cb.label_text_property.font_size = 10
-    mlab.view(azimuth=-135, elevation=66, distance='auto')
+    try: 
+        mlab.view(azimuth=-135, elevation=66, distance='auto')
+    except:
+        print('Error setting automatic distance, setting only angles instead')
+        mlab.view(azimuth=-135, elevation=66)
     mlab.show()
