@@ -3,8 +3,8 @@
 """
 Ultra-precision surface simulation in python 
 
-Copyright (C) 2022  Lars Schönemann
-Leibniz Institut für Werkstofforientierte Technologien IWT, Bremen, Germany
+Copyright (C) 2022  Lars SchÃ¶nemann
+Leibniz Institut fÃ¼r Werkstofforientierte Technologien IWT, Bremen, Germany
 """
 from importlib.metadata import version, PackageNotFoundError
 
