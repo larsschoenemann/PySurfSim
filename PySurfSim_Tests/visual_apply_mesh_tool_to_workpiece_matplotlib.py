@@ -61,6 +61,7 @@ if __name__ == '__main__':
     
     new_mesh = apply_mesh_tool_to_workpiece(surf_mesh, tool_mesh, test_tool)
     
+    # plotting from here
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
     
