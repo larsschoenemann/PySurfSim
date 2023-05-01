@@ -28,8 +28,9 @@ along with this library; if not, write to the Free Software Foundation, Inc.,
 @version: 1.0
 @date:    2022-03-31
 """
+import platform
 import numpy as np
-from mayavi import mlab
+from mayavi import mlab # pylint: disable='E0401'
 from PySurfSim import (MeshToolFlyCut, apply_mesh_tool_to_workpiece,
                        default_parameters, gen_surface_mesh, round_up_to_base)
 
@@ -70,9 +71,10 @@ if __name__ == '__main__':
     cb.data_range = (0, 25)
     cb.number_of_labels = int(np.ceil(25 / 5) + 1)
     cb.label_text_property.font_size = 10
-    try: 
+    if platform.system() == 'Windows':
         mlab.view(azimuth=-135, elevation=66, distance='auto')
-    except:
-        print('Error setting automatic distance, setting only angles instead')
+    else:
+        # distance='auto' crashes with Linux, thus it is not called here
         mlab.view(azimuth=-135, elevation=66)
+        
     mlab.show()

@@ -1,7 +1,19 @@
-1.2.1: added dependencies for mayavi and PyQt5
+# type: ignore
+# pylint: skip-file
 
-1.2.0: new Interface that conforms with Python naming conventions (e.g. applyMeshToolToWorkpiece -> apply_mesh_tool_to_workpiece)
+1.2.2:
++ added pipenv configuration
+c removed distance='auto' for linux-based systems when calling mlab.view
 
-1.1.0: Class-based tool handling implemented
+1.2.1: 
++ added dependencies for mayavi and PyQt5
 
-1.0.0: Initial Release
+1.2.0: 
++ new Interface that conforms with Python naming conventions 
+  (e.g. applyMeshToolToWorkpiece -> apply_mesh_tool_to_workpiece)
+
+1.1.0: 
++ Class-based tool handling implemented
+
+1.0.0: 
++ Initial Release
