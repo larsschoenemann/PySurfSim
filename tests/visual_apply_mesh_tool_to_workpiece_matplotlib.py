@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Visual test case for apply_mesh_tool_to_workpiece.
+Visual test case for apply_mesh_tool_to_workpiece using matplotlib (slow).
 
-Copyright (C) 2022  Lars Schönemann
+Copyright (C) 2026  Lars Schönemann
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as published by 
@@ -17,22 +17,13 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License 
 along with this library; if not, write to the Free Software Foundation, Inc., 
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-@author:  Dr.-Ing. Lars Schönemann
-@contact: schoenemann@iwt.uni-bremen.de
-@address: LFM Laboratory for Precision Machining
-          Leibniz-Institut für Werkstofforientierte Technologien IWT
-          Badgasteiner Straße 2
-          28359 Bremen
-          Germany
-@version: 1.0
-@date:    2022-03-31
 """
-import platform
 import numpy as np
-from mayavi import mlab # pylint: disable='E0401'
-from PySurfSim import (MeshToolFlyCut, apply_mesh_tool_to_workpiece,
-                       default_parameters, gen_surface_mesh, round_up_to_base)
+import matplotlib.pyplot as plt
+from matplotlib import colormaps
+from pysurfsim import (MeshToolFlyCut, default_parameters, 
+                       apply_mesh_tool_to_workpiece, gen_surface_mesh)
+
 
 if __name__ == '__main__':
     # Visual test case
@@ -52,29 +43,25 @@ if __name__ == '__main__':
     tc_y = np.arange(numY) * p['raster_y']
     TC_Z = p['r_fly']
     
-    tool_mesh = np.meshgrid(tc_x, tc_y)
+    tool_mesh = list(np.meshgrid(tc_x, tc_y))
     tool_mesh.append(np.ones(np.shape(tool_mesh[0])) * TC_Z)
     
     test_tool = MeshToolFlyCut(**p)
     
     new_mesh = apply_mesh_tool_to_workpiece(surf_mesh, tool_mesh, test_tool)
     
-    mlab.options.backend = 'auto'
-
-    mlab.surf(new_mesh[0].T, new_mesh[1].T, new_mesh[2].T,
-              warp_scale=1000, colormap='afmhot')
-    mlab.axes(xlabel='feed', ylabel='raster', zlabel='height',
-              ranges=[0, np.ceil(p['lim_x'] / 1000) * 1000,
-                      0, np.ceil(p['lim_y'] / 1000) * 1000,
-                      0, round_up_to_base(np.max(new_mesh[2]), 5)])
-    cb = mlab.colorbar(orientation='vertical')
-    cb.data_range = (0, 25)
-    cb.number_of_labels = int(np.ceil(25 / 5) + 1)
-    cb.label_text_property.font_size = 10
-    if platform.system() == 'Windows':
-        mlab.view(azimuth=-135, elevation=66, distance='auto')
-    else:
-        # distance='auto' crashes with Linux, thus it is not called here
-        mlab.view(azimuth=-135, elevation=66)
-        
-    mlab.show()
+    # plotting from here
+    fig = plt.figure()
+    ax = fig.add_subplot(projection='3d')
+    
+    ax.xaxis.set_major_formatter(lambda x, pos: f'{(x/1000):.0f}')
+    ax.set_xlabel('x in µm')
+    ax.yaxis.set_major_formatter(lambda x, pos: f'{(x/1000):.0f}')
+    ax.set_ylabel('y in µm')
+    ax.set_zlabel('z in nm')
+    ax.set_box_aspect((1,1,0.1))
+    ax.plot_surface(new_mesh[0].T, new_mesh[1].T, new_mesh[2].T, 
+                    vmin=new_mesh[2].min()*2, cmap=colormaps.get_cmap('afmhot'),
+                    rstride=1, cstride=1)
+    
+    plt.show(block=True)

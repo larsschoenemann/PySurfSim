@@ -2,7 +2,7 @@
 """
 Integration test for parallel execution of surface simulation framework.
 
-Copyright (C) 2022  Lars Schönemann
+Copyright (C) 2026  Lars Schönemann
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as published by 
@@ -17,22 +17,14 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License 
 along with this library; if not, write to the Free Software Foundation, Inc., 
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-@author:  Dr.-Ing. Lars Schönemann
-@contact: schoenemann@iwt.uni-bremen.de
-@address: LFM Laboratory for Precision Machining
-          Leibniz-Institut für Werkstofforientierte Technologien IWT
-          Badgasteiner Straße 2
-          28359 Bremen
-          Germany
-@version: 1.2
-@date:    2022-03-31
 """
 import random
 import unittest
 
 import numpy as np
-from PySurfSim import combine_surface, gen_surface_mesh, slice_surface
+from pysurfsim import slice_surface
+from pysurfsim import combine_surface
+from pysurfsim import gen_surface_mesh
 
 
 class TestSurfaceSlicing(unittest.TestCase):
@@ -43,7 +35,7 @@ class TestSurfaceSlicing(unittest.TestCase):
             (1000, 500), fixed_num_points=False)
     
     def test(self):
-        """
+        """Test slicing and combination yields the original surface.
         """
         surf_mesh_slices = slice_surface(
             self.surf_mesh, 5, 10)

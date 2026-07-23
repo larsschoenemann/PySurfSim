@@ -2,7 +2,7 @@
 """
 Test for surface mesh generation.
 
-Copyright (C) 2022  Lars Schönemann
+Copyright (C) 2026  Lars Schönemann
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as published by 
@@ -17,23 +17,13 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License 
 along with this library; if not, write to the Free Software Foundation, Inc., 
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-@author:  Dr.-Ing. Lars Schönemann
-@contact: schoenemann@iwt.uni-bremen.de
-@address: LFM Laboratory for Precision Machining
-          Leibniz-Institut für Werkstofforientierte Technologien IWT
-          Badgasteiner Straße 2
-          28359 Bremen
-          Germany
-@version: 1.2
-@date:    2022-03-31
 """
 import csv
 import unittest
 from pathlib import Path
 
 import numpy as np
-from PySurfSim import export_surface
+from pysurfsim import export_surface
 
 
 class TestUnitExportSurface(unittest.TestCase):
@@ -55,7 +45,7 @@ class TestUnitExportSurface(unittest.TestCase):
         """ test export of surfaces to ASCII """
         x_vec = np.arange(0.0, self.x_len + self.res, self.res)
         y_vec = np.arange(0.0, self.y_len + self.res, self.res)
-        surf_mesh = np.meshgrid(x_vec, y_vec)
+        surf_mesh = list(np.meshgrid(x_vec, y_vec))
         surf_mesh.append(np.ones(np.shape(surf_mesh[0])) * self.z_height)
 
         export_surface('test.asc', surf_mesh)

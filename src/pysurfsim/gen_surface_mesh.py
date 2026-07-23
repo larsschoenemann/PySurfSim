@@ -2,7 +2,7 @@
 """
 Generate a surface mesh for numerical simulation.
 
-Copyright (C) 2022  Lars Schönemann
+Copyright (C) 2026  Lars Schönemann
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as published by 
@@ -17,16 +17,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License 
 along with this library; if not, write to the Free Software Foundation, Inc., 
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-@author: Dr.-Ing. Lars Schönemann
-@contact: schoenemann@iwt.uni-bremen.de
-@address: LFM Laboratory for Precision Machining
-          Leibniz-Institut für Werkstofforientierte Technologien IWT
-          Badgasteiner Straße 2
-          28359 Bremen
-          Germany
-@version: 1.2
-@date:    2022-03-31
 """
 import numpy as np
 
@@ -68,6 +58,6 @@ def gen_surface_mesh(d_x, d_y, z_height=40.0,
     else:
         x_vec = np.arange(0.0, d_x + r_x, r_x)
         y_vec = np.arange(0.0, d_y + r_y, r_y)
-    mygrid = np.meshgrid(x_vec, y_vec)
+    mygrid = list(np.meshgrid(x_vec, y_vec))
     mygrid.append(np.ones(np.shape(mygrid[0])) * z_height)
     return mygrid

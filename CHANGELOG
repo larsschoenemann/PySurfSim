@@ -1,6 +1,10 @@
 # type: ignore
 # pylint: skip-file
 
+1.2.3:
+c changes to adapt for python 3.14 and numpy 2.5
+c changed to uv package management
+
 1.2.2:
 + added pipenv configuration
 c removed distance='auto' for linux-based systems when calling mlab.view

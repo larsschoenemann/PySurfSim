@@ -1,6 +1,24 @@
-[build-system]
-requires = ["setuptools>=45", "wheel", "setuptools_scm>=6.2"]
-build-backend = "setuptools.build_meta"
+[project]
+name = "PySurfSim"
+version = "1.2.3"
+description = "Ultra-precision surface simulation framework"
+authors = [
+  { name="Lars Schoenemann", email="lars.schoenemann@gmx.de" },
+]
+requires-python = ">=3.12"
+readme = "README.md"
+dependencies = [
+    "joblib>=1.5.3",
+    "numpy>=2.5.1",
+]
+license = "LGPL-2.1-or-later"
+license-files = ["LICEN[CS]E*"]
 
-[tool.setuptools_scm]
-write_to = "PySurfSim/_version.py"
+[build-system]
+requires = ["uv_build>=0.11.28,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "matplotlib>=3.11.1",
+]

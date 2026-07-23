@@ -2,7 +2,7 @@
 """
 Integration test for applying a meshed tool to a surface.
 
-Copyright (C) 2022  Lars Schönemann
+Copyright (C) 2026  Lars Schönemann
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as published by 
@@ -17,21 +17,13 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License 
 along with this library; if not, write to the Free Software Foundation, Inc., 
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-@author:  Dr.-Ing. Lars Schönemann
-@contact: schoenemann@iwt.uni-bremen.de
-@address: LFM Laboratory for Precision Machining
-          Leibniz-Institut für Werkstofforientierte Technologien IWT
-          Badgasteiner Straße 2
-          28359 Bremen
-          Germany
-@version: 1.2
-@date:    2022-03-31
 """
 import unittest
 
 import numpy as np
-from PySurfSim import MeshToolFlyCut, apply_mesh_tool_to_workpiece, default_parameters
+from pysurfsim import apply_mesh_tool_to_workpiece
+from pysurfsim.helpers import default_parameters
+from pysurfsim.mesh_tool_fly_cut import MeshToolFlyCut
 
 
 class TestIntApplyMeshToolToWorkpiece(unittest.TestCase):
@@ -42,10 +34,10 @@ class TestIntApplyMeshToolToWorkpiece(unittest.TestCase):
        
         x_vec = np.arange(0.0, 0.140e6, 100)
         y_vec = np.arange(0.0, 0.210e6, 100)
-        surf_mesh = np.meshgrid(x_vec, y_vec)
+        surf_mesh = list(np.meshgrid(x_vec, y_vec))
         surf_mesh.append(np.ones(np.shape(surf_mesh[0])) * 40.0)
         
-        tool_mesh = np.meshgrid([70e3], [105e3])
+        tool_mesh = list(np.meshgrid([70e3], [105e3]))
         tool_mesh.append(np.ones(np.shape(tool_mesh[0])) * 60e6)
         
         tool = MeshToolFlyCut(**parameters)

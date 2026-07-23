@@ -2,7 +2,7 @@
 """
 Integration test for parallel execution of surface simulation framework.
 
-Copyright (C) 2022  Lars Schönemann
+Copyright (C) 2026  Lars Schönemann
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as published by 
@@ -17,25 +17,17 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License 
 along with this library; if not, write to the Free Software Foundation, Inc., 
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-@author:  Dr.-Ing. Lars Schönemann
-@contact: schoenemann@iwt.uni-bremen.de
-@address: LFM Laboratory for Precision Machining
-          Leibniz-Institut für Werkstofforientierte Technologien IWT
-          Badgasteiner Straße 2
-          28359 Bremen
-          Germany
-@version: 1.2
-@date:    2022-03-31
 """
 import unittest
 from timeit import default_timer as timer
 
 import numpy as np
 from joblib import Parallel, delayed, parallel_backend
-from PySurfSim import (MeshToolFlyCut, apply_mesh_tool_to_workpiece,
-                       combine_surface, default_parameters, gen_surface_mesh,
-                       slice_surface)
+from pysurfsim import (combine_surface, slice_surface, 
+                       apply_mesh_tool_to_workpiece, 
+                       gen_surface_mesh, MeshToolFlyCut, 
+                       default_parameters)
+
 
 
 class TestParallelProcessing(unittest.TestCase):
@@ -70,7 +62,7 @@ class TestParallelProcessing(unittest.TestCase):
         tool_center_z = parameters['r_fly']
         
         # tool_mesh = np.meshgrid(toolCenterX, toolCenterY, toolCenterZ)
-        self.tool_mesh = np.meshgrid(tool_center_x, tool_center_y)
+        self.tool_mesh = list(np.meshgrid(tool_center_x, tool_center_y))
         self.tool_mesh.append(
             np.ones(np.shape(self.tool_mesh[0])) * tool_center_z)
         

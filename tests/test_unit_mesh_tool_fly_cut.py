@@ -2,7 +2,7 @@
 """
 Unit test for tool mesh generation.
 
-Copyright (C) 2022  Lars Schönemann
+Copyright (C) 2026  Lars Schönemann
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as published by 
@@ -17,22 +17,12 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License 
 along with this library; if not, write to the Free Software Foundation, Inc., 
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-@author:  Dr.-Ing. Lars Schönemann
-@contact: schoenemann@iwt.uni-bremen.de
-@address: LFM Laboratory for Precision Machining
-          Leibniz-Institut für Werkstofforientierte Technologien IWT
-          Badgasteiner Straße 2
-          28359 Bremen
-          Germany
-@version: 1.2
-@date:    2022-03-31
 """
 import unittest
 
 import numpy as np
-import PySurfSim
-from PySurfSim import MeshToolFlyCut
+import pysurfsim
+from pysurfsim import MeshToolFlyCut
 
 
 class TestMeshToolFlyCut(unittest.TestCase):
@@ -41,11 +31,11 @@ class TestMeshToolFlyCut(unittest.TestCase):
         """ standard test case """
         x_vec = np.arange(0.0, 0.140e6, 100)
         y_vec = np.arange(0.0, 0.210e6, 100)
-        surf_mesh = np.meshgrid(x_vec, y_vec)
+        surf_mesh = list(np.meshgrid(x_vec, y_vec))
         
         tool_mesh = MeshToolFlyCut(r_fly=80e6, delta_r_fly=0.1, r_eps=0.8e6)
         
-        self.assertIsInstance(tool_mesh, PySurfSim.MeshToolFlyCut)
+        self.assertIsInstance(tool_mesh, pysurfsim.MeshToolFlyCut)
         
         f_p = tool_mesh.footprint([0.07e6, 0.104e6, 80e6])
         self.assertEqual(np.shape(f_p), (2, 2))

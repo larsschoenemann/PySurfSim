@@ -2,7 +2,7 @@
 """
 Unit test for surface mesh combination.
 
-Copyright (C) 2022  Lars Schönemann
+Copyright (C) 2026  Lars Schönemann
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as published by 
@@ -17,21 +17,12 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License 
 along with this library; if not, write to the Free Software Foundation, Inc., 
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-@author:  Dr.-Ing. Lars Schönemann
-@contact: schoenemann@iwt.uni-bremen.de
-@address: LFM Laboratory for Precision Machining
-          Leibniz-Institut für Werkstofforientierte Technologien IWT
-          Badgasteiner Straße 2
-          28359 Bremen
-          Germany
-@version: 1.2
-@date:    2022-03-31
 """
 import unittest
 
 import numpy as np
-from PySurfSim import combine_surface, pairwise
+from pysurfsim import pairwise
+from pysurfsim import combine_surface
 
 
 class TestCombineSurface(unittest.TestCase):
@@ -48,7 +39,7 @@ class TestCombineSurface(unittest.TestCase):
         
         x_vec = np.arange(0.0, limits['x'] + limits['res'], limits['res'])
         y_vec = np.arange(0.0, limits['y'] + limits['res'], limits['res'])
-        surf_mesh_org = np.meshgrid(x_vec, y_vec)
+        surf_mesh_org = list(np.meshgrid(x_vec, y_vec))
         surf_mesh_org.append(np.ones(np.shape(surf_mesh_org[0])) * limits['z'])
         
         sliced_surface = []

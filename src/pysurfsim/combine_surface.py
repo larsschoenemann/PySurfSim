@@ -2,7 +2,7 @@
 """
 Combine several patches to a common surface.
 
-Copyright (C) 2022  Lars Schönemann
+Copyright (C) 2026  Lars Schönemann
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as published by 
@@ -17,16 +17,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License 
 along with this library; if not, write to the Free Software Foundation, Inc., 
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-@author: Dr.-Ing. Lars Schönemann
-@contact: schoenemann@iwt.uni-bremen.de
-@address: LFM Laboratory for Precision Machining
-          Leibniz-Institut für Werkstofforientierte Technologien IWT
-          Badgasteiner Straße 2
-          28359 Bremen
-          Germany
-@version: 1.2
-@date:    2022-03-31
 """
 import numpy as np
 
@@ -72,8 +62,8 @@ def combine_surface(sliced_surface, x_div, y_div):
     start_points_xy = np.array([(thisslice[0][0, 0], thisslice[1][0, 0]) 
                                for thisslice in sliced_surface])
     # build record for sorting
-    record = np.core.records.fromarrays([start_points_xy[:, 0],
-                                      start_points_xy[:, 1]], names='a,b')
+    record = np.rec.fromarrays([start_points_xy[:, 0],
+                                start_points_xy[:, 1]], names='a,b')
     # sort sliced_surface list according to sorted record
     sliced_surface[:] = [sliced_surface[i] 
                         for i in record.argsort().astype(int)]

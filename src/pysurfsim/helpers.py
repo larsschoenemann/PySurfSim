@@ -2,7 +2,7 @@
 """
 Helping functions for PySurfSim.
 
-Copyright (C) 2022  Lars Schönemann
+Copyright (C) 2026  Lars Schönemann
 
 This library is free software; you can redistribute it and/or modify 
 it under the terms of the GNU Lesser General Public License as published by 
@@ -17,16 +17,6 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License 
 along with this library; if not, write to the Free Software Foundation, Inc., 
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-@author: Dr.-Ing. Lars Schönemann
-@contact: schoenemann@iwt.uni-bremen.de
-@address: LFM Laboratory for Precision Machining
-          Leibniz-Institut für Werkstofforientierte Technologien IWT
-          Badgasteiner Straße 2
-          28359 Bremen
-          Germany
-@version: 1.2
-@date:    2022-03-31
 """
 from itertools import tee
 import numpy as np
@@ -105,4 +95,3 @@ def get_surface_subset(surf_mesh, limits):
     selection = (slice(x_span[0], x_span[1] + 1), slice(y_span[0], y_span[1] + 1))
 
     return [mesh_part[selection] for mesh_part in surf_mesh], selection
-    
