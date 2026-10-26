@@ -22,7 +22,7 @@ import unittest
 from timeit import default_timer as timer
 
 import numpy as np
-from joblib import Parallel, delayed, parallel_backend
+from joblib import Parallel, delayed, parallel_config
 from pysurfsim import (combine_surface, slice_surface, 
                        apply_mesh_tool_to_workpiece, 
                        gen_surface_mesh, MeshToolFlyCut, 
@@ -86,7 +86,7 @@ class TestParallelProcessing(unittest.TestCase):
         surf_mesh_slices = slice_surface(
             self.surf_mesh, self.n_jobs, self.n_jobs)
         new_mesh_slices = []
-        with parallel_backend('loky', n_jobs=self.n_jobs):
+        with parallel_config('multiprocessing', n_jobs=self.n_jobs):
             new_mesh_slices = Parallel()(delayed(apply_mesh_tool_to_workpiece)(
                 surf_mesh_slice, self.tool_mesh, self.tool) 
                 for surf_mesh_slice in surf_mesh_slices)
